@@ -1,8 +1,12 @@
 import React from 'react'
+import { View } from 'react-native'
+import { Text } from 'react-native-paper'
 
 const Acceso = () => {
   return (
-    <div>Acceso</div>
+    <View>
+      <Text>Acceso</Text>
+    </View>
   )
 }
 
