@@ -2,15 +2,11 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 
-const Acceso = ({navigation}) => {
+const Tematicas = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Acceso (entra en tu cuenta)</Text>
-      <Button
-        mode="contained"
-        icon="information"
-        onPress={() => navigation.navigate('Registro')}
-      >Registrate aquí</Button>
+      <Text>Vista general de una tematica</Text> 
+      <Text style={styles.big}>Xantolo</Text>
     </View>
   )
 }
@@ -21,7 +17,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  big: {
+    fontSize: 30,
+    fontWeight: 'bold',
+  }
 });
 
 
-export default Acceso
+export default Tematicas

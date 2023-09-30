@@ -2,15 +2,10 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 
-const Acceso = ({navigation}) => {
+const Guardados = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Acceso (entra en tu cuenta)</Text>
-      <Button
-        mode="contained"
-        icon="information"
-        onPress={() => navigation.navigate('Registro')}
-      >Registrate aquí</Button>
+      <Text>Despues de leer el articulo puedes encontrarlo aquí para leerlo más tarde sin conexión</Text>
     </View>
   )
 }
@@ -24,4 +19,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Acceso
+export default Guardados

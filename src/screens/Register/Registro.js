@@ -2,15 +2,15 @@ import React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Button, Text } from 'react-native-paper'
 
-const Acceso = ({navigation}) => {
+const Registro = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Acceso (entra en tu cuenta)</Text>
+      <Text>Registro (registrate)</Text>
       <Button
-        mode="contained"
+        mode="outlined"
         icon="information"
-        onPress={() => navigation.navigate('Registro')}
-      >Registrate aquí</Button>
+        onPress={() => navigation.navigate('Acceso')}
+      >Accede a tu cuenta</Button>
     </View>
   )
 }
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Acceso
+export default Registro

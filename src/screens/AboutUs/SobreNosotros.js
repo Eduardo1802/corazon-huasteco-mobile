@@ -1,12 +1,12 @@
 // SobreNosotrosScreen.js
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Avatar, Badge, Button, Card, IconButton, Tooltip } from 'react-native-paper';
 
 const SobreNosotros = () => {
   return (
-    <>
-        <View>
+    <ScrollView>
+        <View style={{overflowY: "auto"}}>
             <Card>
                 <Card.Title title="Sobre Nosotros" subtitle="Subtitulo" left={(props) => <Avatar.Icon {...props} icon="information" />} />
                 <Card.Content>
@@ -24,9 +24,55 @@ const SobreNosotros = () => {
         
             <Text>Sobre nosotros: Aquí puedes agregar información sobre tu empresa o equipo.</Text>
 
-            
+            <Text>
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+            </Text>
         </View>
-    </>
+    </ScrollView>
   );
 };
 
