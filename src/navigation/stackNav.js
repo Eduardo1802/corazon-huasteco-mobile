@@ -8,24 +8,35 @@ import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Tematicas/Tematicas";
 import { createStackNavigator } from "@react-navigation/stack";
+import { Logo } from "../components/customs/Logo";
 
 
 const Stack = createStackNavigator();
 
 export function HomeStackScreen() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: '#531949', // Cambia el color de fondo de la barra de navegación aquí
+        },
+        headerTintColor: '#D9CAAD', // Cambia el color del texto en la barra de navegación aquí
+      }}
+    >
       <Stack.Screen name="InicioHome" component={Inicio}
-        options={({ navigation }) => ({
-          title: 'Corazón Huasteco',
+        options={({ navigation, color }) => ({
           headerRight: () => (
             <IconButton
               icon="cog"
+              iconColor="#D9CAAD"
               onPress={() => {
                 navigation.navigate("Configuración")
               }}
             />
           ),
+          headerTitle: () => (
+            <Logo/>
+          )
         })}
       />
 
@@ -35,12 +46,14 @@ export function HomeStackScreen() {
           headerLeft: () => (
             <IconButton
               icon="arrow-left" 
+              iconColor="#D9CAAD"
               onPress={() => navigation.goBack()}
             />
           ),
           headerRight: () => (
             <IconButton
               icon="login" 
+              iconColor="#D9CAAD"
               onPress={() => navigation.navigate("Acceso")}
             />
           ),
@@ -53,6 +66,7 @@ export function HomeStackScreen() {
           headerLeft: () => (
             <IconButton
               icon="arrow-left" 
+              iconColor="#D9CAAD"
               onPress={() => navigation.goBack()}
             />
           ),
@@ -66,6 +80,7 @@ export function HomeStackScreen() {
           headerLeft: () => (
             <IconButton
               icon="arrow-left" 
+              iconColor="#D9CAAD"
               onPress={() => navigation.goBack()}
             />
           ),
