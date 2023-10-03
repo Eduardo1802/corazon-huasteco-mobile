@@ -93,7 +93,7 @@ export default function Navigation() {
     <NavigationContainer>
       <Tab.Navigator
         initialRouteName="Incio"
-        activeColor="#e91e63"
+        // activeColor="#e91e63"
         // activeColor="#e91e63"
         // barStyle={{ backgroundColor: 'tomato' }}
       >
