@@ -63,9 +63,7 @@ const Acceso = ({ navigation }) => {
 
         <View style={styles.separador}>
           <Text style={styles.linea}></Text>
-          <Text
-          variant=""
-          >O</Text>
+          <Text variant="">O</Text>
           <Text style={styles.linea}></Text>
         </View>
         <Button
@@ -76,16 +74,6 @@ const Acceso = ({ navigation }) => {
         >
           Continuar con Google
         </Button>
-       
-   
-        <View style={styles.terminos}>
-          <Text variant="titleMedium">Al continuar, aceptas nuestros </Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Registro")}>
-            <Text variant="titleMedium" style={styles.registerLink}>
-              Términos y condiciones
-            </Text>
-          </TouchableOpacity>
-        </View>
       </View>
     </View>
   );
