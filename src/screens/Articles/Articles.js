@@ -8,7 +8,7 @@ import {
   IconButton,
 } from "react-native-paper";
 
-const Recientes = ({ navigation }) => {
+const Articles = ({ navigation }) => {
   // Menu
   const [value, setValue] = React.useState("");
   // Temàticas
@@ -29,8 +29,8 @@ const Recientes = ({ navigation }) => {
               icon: "clipboard-text-clock",
             },
             {
-              value: "todas",
-              label: "Todas",
+              value: "todos",
+              label: "Todos",
               icon: "clipboard-text-multiple",
             },
             // {
@@ -43,7 +43,7 @@ const Recientes = ({ navigation }) => {
 
         <Text style={styles.text}>Texto para {value}</Text>
       </SafeAreaView>
-      {value === "todas" && (
+      {value === "todos" && (
          <>
           <Card.Title
             title="Vestimenta"
@@ -104,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Recientes;
+export default Articles;

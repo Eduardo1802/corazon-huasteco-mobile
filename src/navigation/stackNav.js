@@ -3,7 +3,7 @@ import Acceso from "../screens/Acces/Acceso";
 import { Configuracion } from "../screens/Config/Configuracion";
 import Tienda from "../screens/Store/Store";
 import Inicio from "../screens/Home/Inicio";
-import Articulos from "../screens/Articulos/Articulos";
+import Articulos from "../screens/Articles/Articles";
 import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Tematicas/Tematicas";
