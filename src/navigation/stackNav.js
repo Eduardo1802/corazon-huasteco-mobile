@@ -7,6 +7,7 @@ import Recientes from "../screens/Recents/Recientes";
 import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Tematicas/Tematicas";
+import SobreNosotros from '../screens/AboutUs/SobreNosotros';
 import { createStackNavigator } from "@react-navigation/stack";
 import { Logo } from "../components/customs/Logo";
 
@@ -88,6 +89,18 @@ export function HomeStackScreen() {
         })}
       />
       
+      <Stack.Screen name="SobreNosotros" component={SobreNosotros} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
 
     </Stack.Navigator>
   );

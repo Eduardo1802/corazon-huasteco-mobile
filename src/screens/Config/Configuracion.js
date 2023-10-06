@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Text, Switch as PaperSwitch, List, Divider } from 'react-native-paper';
 
-export const Configuracion = () => {
+export const Configuracion = ({navigation}) => {
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
 
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
@@ -15,7 +15,7 @@ export const Configuracion = () => {
           <List.Item
               title="Pantalla"
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
-              left={() => <List.Icon icon="desktop" />}
+              left={() => <List.Icon icon="folder" />}
             />
             <Text style={{ flex: 1, textAlign: 'right', color: 'black'}}> Sincronizar dispositivo</Text>
           </View>
@@ -66,11 +66,13 @@ export const Configuracion = () => {
               left={() => <List.Icon icon="folder" />}
             />
           <Divider style={styles.dividerStyle}/>
-          <List.Item 
-              title="Sobre nosotros" 
-              titleStyle={{ color: 'black', fontWeight: 'bold' }}
-              left={() => <List.Icon icon="folder" />}
-            />
+          <TouchableOpacity onPress={() => navigation.navigate('SobreNosotros')}>
+            <List.Item 
+                title="Sobre nosotros" 
+                titleStyle={{ color: 'black', fontWeight: 'bold' }}
+                left={() => <List.Icon icon="folder" />}
+              />
+          </TouchableOpacity>
           <Divider style={styles.dividerStyle}/>
           <List.Item 
               title="Contactanos" 

@@ -1,77 +1,50 @@
 // SobreNosotrosScreen.js
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { Avatar, Badge, Button, Card, IconButton, Tooltip } from 'react-native-paper';
+import * as React from "react";
+import { Text, Card } from "react-native-paper";
+import { View, StyleSheet, ScrollView } from "react-native";
+
 
 const SobreNosotros = () => {
   return (
-    <ScrollView>
-        <View style={{overflowY: "auto"}}>
-            <Card>
-                <Card.Title title="Sobre Nosotros" subtitle="Subtitulo" left={(props) => <Avatar.Icon {...props} icon="information" />} />
-                <Card.Content>
-                    <Text>Contenido</Text>
-                </Card.Content>
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-                <Card.Actions>
-                    <Button>Cancel</Button>
-                    <Button>Ok</Button>
-                </Card.Actions>
-            </Card>
-            <Text>hello there   </Text>
-            <Avatar.Text size={44} label="XD" />
-            <Badge>30</Badge>
-        
-            <Text>Sobre nosotros: Aquí puedes agregar información sobre tu empresa o equipo.</Text>
-
-            <Text>
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.  
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    <ScrollView >
+      <View style={styles.container}>
+        <Text variant="displaySmall" style={{ marginBottom: 30 }}>
+          Sobre nosotros
+        </Text>
+        {/* <Example /> */}
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text variant="titleMedium">Misión:</Text>
+            <Text style={{ marginBottom: 25 }}>
+              Somos una empresa que promueve la cultura a traves de la difusión
+              y fomento de la enseña que impulsen la libre expresión cultural,
+              estimulando los trabajos de creación, investigación, cientificos,
+              literarios y artisticos
             </Text>
-        </View>
+            <Card.Cover
+              source={{
+                uri: "https://corazon-huasteco.com/assets/imgSobreNosotros-704d5a3c.jpg",
+              }}
+            />
+          </Card.Content>
+        </Card>
+
+        <Card style={styles.card}>
+          <Card.Content>
+            <Text variant="titleMedium">Visión:</Text>
+            <Text style={{ marginBottom: 25 }}>
+              Ser una empresa importante en el ambito cultural del municipio de
+              Huejutla de Reyes Hidalgo para proyectar a nivel nacional e
+              internacional la cultura de esta región.
+            </Text>
+            <Card.Cover
+              source={{
+                uri: "https://corazon-huasteco.com/assets/imgMural-01-34200bdf.jpg",
+              }}
+            />
+          </Card.Content>
+        </Card>
+      </View>
     </ScrollView>
   );
 };
@@ -79,8 +52,11 @@ const SobreNosotros = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 20,
+    paddingTop: 50,
+  },
+  card: {
+    marginBottom: 30,
   },
 });
 
