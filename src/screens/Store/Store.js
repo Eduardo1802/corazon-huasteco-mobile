@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Dimensions } from 'react-native';
 import { Searchbar, Text } from 'react-native-paper';
 
-const Explorar = ({ navigation }) => {
+const Store = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = React.useState('');
 
   const windowWidth = Dimensions.get('window').width;
@@ -13,7 +13,7 @@ const Explorar = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Searchbar
-        placeholder ="Explorar temáticas"
+        placeholder ="Buscar..."
         onChangeText={onChangeSearch}
         value={searchQuery}
         style={[
@@ -47,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Explorar;
+export default Store;

@@ -1,9 +1,9 @@
 import { IconButton, Text } from "react-native-paper";
 import Acceso from "../screens/Acces/Acceso";
 import { Configuracion } from "../screens/Config/Configuracion";
-import Explorar from "../screens/Explore/Explorar";
+import Tienda from "../screens/Store/Store";
 import Inicio from "../screens/Home/Inicio";
-import Recientes from "../screens/Recents/Recientes";
+import Articulos from "../screens/Articulos/Articulos";
 import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Tematicas/Tematicas";
@@ -122,18 +122,18 @@ export function HomeStackScreen() {
 export function RecentStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="RecientesHome" component={Recientes}
+      <Stack.Screen name="RecientesHome" component={Articulos}
         options={({ navigation }) => ({
-          title: 'Recientes',
-          headerRight: () => (
-            <Text>adicionales</Text>
-          ),
+          title: 'Articulos',
+          // headerRight: () => (
+          //   <Text>adicionales</Text>
+          // ),
         })}
       />
 
       <Stack.Screen name="Tematicas" component={Tematicas}
         options={({ navigation }) => ({
-          title: 'Tematicas',
+          title: 'Temáticas',
         })}
       />      
     </Stack.Navigator>
@@ -152,12 +152,12 @@ export function SavedStackScreen(){
   );
 }
 
-export function ExploreStackScreen(){
+export function StoreStackScreen(){
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ExplorarHome" component={Explorar}
+      <Stack.Screen name="TiendaHome" component={Tienda}
         options={({ navigation }) => ({
-          title: 'Explorar',
+          title: 'Tienda',
         })}
       />   
     </Stack.Navigator>
