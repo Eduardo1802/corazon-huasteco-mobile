@@ -80,6 +80,14 @@ export const Configuracion = ({navigation}) => {
               left={() => <List.Icon icon="folder" />}
             />
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('ChatBot')}>  
+          <List.Item
+            title="Chatbot"
+            titleStyle={{ color: 'black', fontWeight: 'bold' }}
+            left={() => <List.Icon icon="folder"/>}
+          />
+          <Divider style={styles.dividerStyle}/>
+        </TouchableOpacity>
         </List.Section>
       </View>
     </ScrollView>
