@@ -2,7 +2,7 @@ import * as React from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { NavigationContainer } from '@react-navigation/native';
-import { StoreStackScreen, HomeStackScreen, RecentStackScreen, SavedStackScreen } from './stackNav';
+import { StoreStackScreen, HomeStackScreen, ArticlesStackScreen, SavedStackScreen } from './stackNav';
 
 
 const Tab = createMaterialBottomTabNavigator();
@@ -31,9 +31,9 @@ export default function Navigation() {
 
         <Tab.Screen
           name="Articulos"
-          component={RecentStackScreen}
+          component={ArticlesStackScreen}
           options={{
-            tabBarLabel: 'Articulos',
+            tabBarLabel: 'Artículos',
             tabBarIcon: ({ color }) => (
               <MaterialCommunityIcons name="text-box" color={color} size={26} />
             ),
@@ -57,7 +57,7 @@ export default function Navigation() {
           options={{
             tabBarLabel: 'Tienda',
             tabBarIcon: ({ color }) => (
-              <MaterialCommunityIcons name="store" color={color} size={26} />
+              <MaterialCommunityIcons name="shopping" color={color} size={26} />
             ),
           }}
         />

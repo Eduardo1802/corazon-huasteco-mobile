@@ -1,106 +1,288 @@
 import * as React from "react";
-import { StyleSheet, View, SafeAreaView, Text } from "react-native";
-import {
-  SegmentedButtons,
-  List,
-  Card,
-  Avatar,
-  IconButton,
-} from "react-native-paper";
+import { StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
+import { SegmentedButtons, Card, Avatar, Dialog, Portal, Text, Button, Checkbox } from "react-native-paper";
 
 const Articles = ({ navigation }) => {
   // Menu
-  const [value, setValue] = React.useState("");
-  // Temàticas
-  const [expanded, setExpanded] = React.useState(true);
-  const handlePress = () => setExpanded(!expanded);
+  const [value, setValue] = React.useState("recientes");
 
+  // Ventana emergente
+  const [visible, setVisible] = React.useState(false);
+  const close = () => setVisible(false);
+  const open = () => setVisible(true);
+
+  // Selección de Temáticas
+  const [vestimenta, setVestimenta] = React.useState(false);
+  const [danza, setDanza] = React.useState(false);
+  const [grastonomia, setGrastonomia] = React.useState(false);
+  const [musica, setMusica] = React.useState(false);
+  const [tradicciones, setTradicciones] = React.useState(false);
+  const [temas, setTemas] = React.useState("");
+
+  const selectTematicas = () => {
+    const tematicasSeleccionadas = [];
+
+    if (vestimenta) {
+      tematicasSeleccionadas.push("Vestimenta");
+    }
+    if (danza) {
+      tematicasSeleccionadas.push("Danza");
+    }
+    if (grastonomia) {
+      tematicasSeleccionadas.push("Gastronomía");
+    }
+    if (musica) {
+      tematicasSeleccionadas.push("Música");
+    }
+    if (tradicciones) {
+      tematicasSeleccionadas.push("Tradicciones");
+    }
+
+    setTemas(tematicasSeleccionadas);
+    setVisible(false);
+  };
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={styles.SafeAreaView}>
-        <SegmentedButtons
-          value={value}
-          onValueChange={setValue}
-          buttons={[
-            {
-              value: "recientes",
-              label: "Recientes",
-              icon: "clipboard-text-clock",
-            },
-            {
-              value: "todos",
-              label: "Todos",
-              icon: "clipboard-text-multiple",
-            },
-            // {
-            //   value: "Tematicas",
-            //   label: "Temáticas",
-            //   icon: "text-box",
-            // },
-          ]}
-        />
+    <ScrollView>
+      <View style={styles.container}>
+        {/* MENU */}
+        <SafeAreaView style={styles.SafeAreaView}>
+          <SegmentedButtons
+            value={value}
+            onValueChange={setValue}
+            buttons={[
+              {
+                value: "recientes",
+                label: "Recientes",
+                icon: "clipboard-text-clock",
+              },
+              {
+                value: "todos",
+                label: "Todos",
+                icon: "clipboard-text-multiple",
+                onPress: open,
+              },
+            ]}
+          />
+        </SafeAreaView>
 
-        <Text style={styles.text}>Texto para {value}</Text>
-      </SafeAreaView>
-      {value === "todos" && (
-         <>
-          <Card.Title
-            title="Vestimenta"
-            subtitle="La vestimenta en Huejutla de Reyes Hidalgo en su representación tiene a su barrio de Chililico lugar del chililitet (piedra de obsidiana) tierra de alfareros descendientes de aquellos trabajadores del barro que prepararon cerámica desde la época prehispánica que por su diseño y acabado es única en el mundo."
-            style={[styles.card, styles.cardTop]}
-            left={(props) => <Avatar.Icon {...props} size={44} icon="folder" />}
-          />
-          <Card.Title
-            title="Danza"
-            subtitle="La danza tradicional en Huejutla de Reyes Hidalgo es denominada la danza de las inditas; tradición que viene de generación en generación y sigue viva en las comunidades de la Huasteca Hidalguense. La danza se lleva a cabo al son del trio de huapangueros que interpretan sones y alabanzas religiosas."
-            style={[styles.card, styles.cardTop]}
-            left={(props) => <Avatar.Icon {...props} size={44} icon="folder" />}
-          />
-          <Card.Title
-            title="Gastronomía"
-            subtitle="La gastronomía en Huejutla de Reyes Hidalgo es sin duda, un atractivo muy importante, ofreciendo exquisitas enchiladas de chile seco, tomate verde o rojo o ajonjolí, el zacahuil, cecina, tamales, bocoles, el xohol, pollo huasteco o ranchero, barbacoa de res, carnitas de puerco, mole verde y rojo, capiado y tampiqueñas, entre otros."
-            style={[styles.card, styles.cardTop]}
-            left={(props) => <Avatar.Icon {...props} size={44} icon="folder" />}
-          />
-          <Card.Title
-            title="Música"
-            subtitle="La música tradicional en Huejutla de reyes Hidalgo es el sistema musical de los nahuas la cual se estructura a partir de la oposición entre un eje que establece, por un lado, un ámbito religioso, y por el otro, un ámbito secular. Ambos se encuentran en el campo de lo sagrado, qué solo se define por su oposición a lo profrano."
-            style={[styles.card, styles.cardTop]}
-            left={(props) => <Avatar.Icon {...props} size={44} icon="folder" />}
-          />
-          <Card.Title
-            title="Tradicciones"
-            subtitle="Las tradiciones en Huejutla de Reyes Hidalgo se forjaron a partir de las costumbres, noticias, composiciones literarias y doctrinas, que pasaron de generación en generación. Las tradiciones más importantes en esta región son el carnaval, la fiesta del tordo, semana santa, Xantolo, fiesta guadalupana, feria de nochebuena y las fiestas patrias."
-            style={[styles.card, styles.cardTop]}
-            left={(props) => <Avatar.Icon {...props} size={44} icon="folder" />}
-          />
-        </>
-      )}
-    </View>
+        {/* MENU OPCIONES */}
+        <Portal>
+          <Dialog visible={visible} onDismiss={close}>
+            <Dialog.Title style={styles.title}>
+              Seleccione la temática
+            </Dialog.Title>
+            <Dialog.Content>
+              <Card.Title
+                title="Vestimenta"
+                titleStyle={{ color: "#531949" }}
+                left={(props) => (
+                  <Avatar.Icon {...props} size={44} icon="hanger" />
+                )}
+                right={(props) => (
+                  <Checkbox
+                    status={vestimenta ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setVestimenta(!vestimenta);
+                    }}
+                  />
+                )}
+              />
+              <Card.Title
+                title="Danza"
+                left={(props) => (
+                  <Avatar.Icon {...props} size={44} icon="human-female-dance" />
+                )}
+                right={(props) => (
+                  <Checkbox
+                    status={danza ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setDanza(!danza);
+                    }}
+                  />
+                )}
+              />
+              <Card.Title
+                title="Gastronomía"
+                left={(props) => (
+                  <Avatar.Icon
+                    {...props}
+                    size={44}
+                    icon="silverware-fork-knife"
+                  />
+                )}
+                right={(props) => (
+                  <Checkbox
+                    status={grastonomia ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setGrastonomia(!grastonomia);
+                    }}
+                  />
+                )}
+              />
+              <Card.Title
+                title="Música"
+                left={(props) => (
+                  <Avatar.Icon {...props} size={44} icon="music-note-eighth" />
+                )}
+                right={(props) => (
+                  <Checkbox
+                    status={musica ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setMusica(!musica);
+                    }}
+                  />
+                )}
+              />
+              <Card.Title
+                title="Tradicciones"
+                left={(props) => (
+                  <Avatar.Icon {...props} size={44} icon="flag" />
+                )}
+                right={(props) => (
+                  <Checkbox
+                    status={tradicciones ? "checked" : "unchecked"}
+                    onPress={() => {
+                      setTradicciones(!tradicciones);
+                    }}
+                  />
+                )}
+              />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={close}>Cancelar</Button>
+              <Button onPress={selectTematicas}>Filtrar</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+
+        {/* OPCIÓN  TODOS */}
+        {value === "todos" && (
+          <>
+            {temas.length > 0 && (
+              <>
+                <Card>
+                  <Card.Content>
+                    <Text variant="titleMedium">
+                      Temáticas seleccionadas: {temas.join(", ")}
+                    </Text>
+                  </Card.Content>
+                </Card>
+
+                <Card style={styles.card}>
+                  <Card.Content>
+                    <Card.Cover
+                      source={{
+                        uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/Tradiciones%2Fcarnaval.jpg?alt=media&token=861b6e9f-2e59-43a8-a28b-46f62d43d2c9",
+                      }}
+                    />
+                    <Text variant="titleLarge" style={styles.text}>
+                      Carnaval
+                    </Text>
+                    <Text variant="bodySmall" style={styles.text}>
+                      30 de febrero
+                    </Text>
+                    {/* <Text variant="bodySmall" style={styles.full_text}>
+                      Se efectúa a fines de febrero, alguna excepción a
+                      principios de marzo, cuatro días antes del miércoles de
+                      ceniza, martes antes del miércoles...
+                    </Text> */}
+                    <Button
+                      icon="text-box"
+                      mode="contained"
+                      style={styles.button}
+                      onPress={() => navigation.navigate("Tematicas")}
+                    >
+                      Leer artículo
+                    </Button>
+                    <Button
+                      icon="arrow-down-circle-outline"
+                      mode="contained"
+                      style={styles.button}
+                    >
+                      Descargar artículo
+                    </Button>
+                  </Card.Content>
+                </Card>
+              </>
+            )}
+          </>
+        )}
+
+        {/* OPCIÓN RECIENTES */}
+        {value === "recientes" && (
+          <>
+            <Card>
+              <Card.Content>
+                <Card.Cover
+                  source={{
+                    uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/Tradiciones%2Fcarnaval.jpg?alt=media&token=861b6e9f-2e59-43a8-a28b-46f62d43d2c9",
+                  }}
+                />
+                <Text variant="titleLarge" style={styles.text}>
+                  Carnaval
+                </Text>
+                <Text variant="bodySmall" style={styles.text}>
+                  30 de febrero
+                </Text>
+                {/* <Text variant="bodySmall" style={styles.full_text}>
+                  Se efectúa a fines de febrero, alguna excepción a principios
+                  de marzo, cuatro días antes del miércoles de ceniza, martes
+                  antes del miércoles...
+                </Text> */}
+                <Button
+                  icon="text-box"
+                  mode="contained"
+                  style={styles.button}
+                  onPress={() => navigation.navigate("Tematicas")}
+                >
+                  Leer artículo
+                </Button>
+                <Button
+                  icon="arrow-down-circle-outline"
+                  mode="contained"
+                  style={styles.button}
+                >
+                  Descargar artículo
+                </Button>
+              </Card.Content>
+            </Card>
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
+    padding: 20
   },
   SafeAreaView: {
-    flex: 1,
+    display: "flex",
     alignItems: "center",
+    marginBottom: 20
   },
   text: {
-    flex: 1,
-    marginTop: 20,
+    marginTop: 10,
+    textAlign: "center"
+  },
+  full_text: {
+    marginTop: 5,
+    textAlign: "justify"
+  },
+  title: {
+    textAlign: "center"
   },
   card: {
-    borderRadius: 5,
-    borderColor: "black",
-    borderWidth: 0.2,
-    marginBottom: 20
+    marginTop: 10,
+  },
+  button: {
+    marginTop: 10,
+    backgroundColor: "#531949",
+    borderRadius: 10
   },
 });
 

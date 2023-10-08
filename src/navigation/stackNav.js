@@ -6,7 +6,7 @@ import Inicio from "../screens/Home/Inicio";
 import Articulos from "../screens/Articles/Articles";
 import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
-import Tematicas from "../screens/Tematicas/Tematicas";
+import Tematicas from "../screens/Thematic/Thematic";
 import SobreNosotros from '../screens/AboutUs/SobreNosotros';
 import ChatBot from '../screens/ChatBot/ChatBot';
 import { createStackNavigator } from "@react-navigation/stack";
@@ -119,12 +119,12 @@ export function HomeStackScreen() {
   );
 }
 
-export function RecentStackScreen() {
+export function ArticlesStackScreen() {
   return (
     <Stack.Navigator>
       <Stack.Screen name="RecientesHome" component={Articulos}
         options={({ navigation }) => ({
-          title: 'Articulos',
+          title: 'Artículos',
           // headerRight: () => (
           //   <Text>adicionales</Text>
           // ),
@@ -133,7 +133,7 @@ export function RecentStackScreen() {
 
       <Stack.Screen name="Tematicas" component={Tematicas}
         options={({ navigation }) => ({
-          title: 'Temáticas',
+          title: '',
         })}
       />      
     </Stack.Navigator>
