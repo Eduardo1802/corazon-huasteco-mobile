@@ -172,9 +172,6 @@ const Articles = ({ navigation }) => {
                       onChangeText={onChangeSearch}
                       value={searchQuery}
                     />
-                    {/* <Text variant="titleMedium" style={styles.title}>
-                      Temáticas seleccionadas: {temas.join(", ")}
-                    </Text> */}
                   </Card.Content>
                 </Card>
 

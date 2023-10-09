@@ -3,7 +3,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text, Card, Divider, Avatar, Dialog, Portal, TextInput } from "react-native-paper";
 import { AirbnbRating } from "react-native-ratings";
 
-const Thematic = ({ navigation }) => {
+const Tematicas = () => {
   // Ventana emergente
   const [visible, setVisible] = React.useState(false);
   const close = () => setVisible(false);
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
   },
   textinput: {
     marginBottom:10
-  }
+  } 
 });
 
-export default Thematic;
+export default Tematicas;

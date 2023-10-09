@@ -6,9 +6,10 @@ import Inicio from "../screens/Home/Inicio";
 import Articulos from "../screens/Articles/Articles";
 import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
-import Tematicas from "../screens/Thematic/Thematic";
+import Tematicas from "../screens/Thematics/Tematicas";
 import SobreNosotros from '../screens/AboutUs/SobreNosotros';
 import ChatBot from '../screens/ChatBot/ChatBot';
+import ArtGuardados from '../screens/ArticlesSaved/ArtGuardados'
 import { createStackNavigator } from "@react-navigation/stack";
 import { Logo } from "../components/customs/Logo";
 
@@ -148,6 +149,12 @@ export function SavedStackScreen(){
           title: 'Guardados',
         })}
       />   
+
+      <Stack.Screen name="ArtGuardados" component={ArtGuardados}
+        options={({ navigation }) => ({
+          title: '',
+        })}
+      />    
     </Stack.Navigator>
   );
 }
