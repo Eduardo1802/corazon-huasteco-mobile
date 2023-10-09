@@ -1,23 +1,16 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { ActivityIndicator, MD2Colors } from 'react-native-paper';
+import * as React from 'react';
+import {  SafeAreaProvider } from 'react-native-safe-area-context';
+import { PaperProvider } from 'react-native-paper';
+import Navigation from './src/navigation/Navigation';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Hello world from another world</Text>
-      <StatusBar style="auto" />
-
-      <ActivityIndicator animating={true} color={MD2Colors.purple300} />
-    </View>
+    <>
+      <SafeAreaProvider>
+        <PaperProvider>
+          <Navigation/>
+        </PaperProvider>
+      </SafeAreaProvider>
+    </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
