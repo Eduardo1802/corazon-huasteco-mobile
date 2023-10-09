@@ -1,6 +1,6 @@
 import * as React from "react";
 import { StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
-import { SegmentedButtons, Card, Avatar, Dialog, Portal, Text, Button, Checkbox } from "react-native-paper";
+import { SegmentedButtons, Card, Avatar, Dialog, Portal, Text, Button, Checkbox, Searchbar } from "react-native-paper";
 
 const Articles = ({ navigation }) => {
   // Menu
@@ -18,6 +18,10 @@ const Articles = ({ navigation }) => {
   const [musica, setMusica] = React.useState(false);
   const [tradicciones, setTradicciones] = React.useState(false);
   const [temas, setTemas] = React.useState("");
+
+  // Buscador
+  const [searchQuery, setSearchQuery] = React.useState('');
+  const onChangeSearch = query => setSearchQuery(query);
 
   const selectTematicas = () => {
     const tematicasSeleccionadas = [];
@@ -163,11 +167,24 @@ const Articles = ({ navigation }) => {
               <>
                 <Card>
                   <Card.Content>
+                    <Searchbar
+                      placeholder="Buscar..."
+                      onChangeText={onChangeSearch}
+                      value={searchQuery}
+                    />
+                    {/* <Text variant="titleMedium" style={styles.title}>
+                      Temáticas seleccionadas: {temas.join(", ")}
+                    </Text> */}
+                  </Card.Content>
+                </Card>
+
+                <Card style={styles.card}>
+                  <Card.Content>
                     <Text variant="titleMedium">
                       Temáticas seleccionadas: {temas.join(", ")}
                     </Text>
                   </Card.Content>
-                </Card>
+                </Card> 
 
                 <Card style={styles.card}>
                   <Card.Content>
@@ -274,7 +291,8 @@ const styles = StyleSheet.create({
     textAlign: "justify"
   },
   title: {
-    textAlign: "center"
+    textAlign: "center",
+    marginTop:10
   },
   card: {
     marginTop: 10,
@@ -284,6 +302,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#531949",
     borderRadius: 10
   },
+  searchBar: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 18,
+    borderColor: 'black',
+    borderWidth: 1,
+  }
 });
 
 export default Articles;

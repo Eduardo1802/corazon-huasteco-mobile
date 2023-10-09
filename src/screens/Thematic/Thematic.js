@@ -1,9 +1,22 @@
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Text, Card, Divider, Avatar } from "react-native-paper";
-import { Rating, AirbnbRating } from "react-native-ratings";
+import { Button, Text, Card, Divider, Avatar, Dialog, Portal, TextInput } from "react-native-paper";
+import { AirbnbRating } from "react-native-ratings";
 
-const Thematic  = ({ navigation }) => {
+const Thematic = ({ navigation }) => {
+  // Ventana emergente
+  const [visible, setVisible] = React.useState(false);
+  const close = () => setVisible(false);
+  const open = () => setVisible(true);
+  // Comentario
+  const [comentatio, setComentatio] = React.useState("");
+  const [puntuación, setPuntuación] = React.useState(0);
+
+  const enviarComentario = () => {
+    console.log("Comentario:", comentatio);
+    console.log("Puntuación:", puntuación);
+  };
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -29,6 +42,36 @@ const Thematic  = ({ navigation }) => {
           </Card.Content>
         </Card>
 
+
+        {/* FORMULALIO COMENTARIO */}
+        <Portal>
+          <Dialog visible={visible} onDismiss={close}>
+            <Dialog.Title style={styles.title}>
+              Agregar Comentario
+            </Dialog.Title>
+            <Dialog.Content>
+              <Divider style={styles.divider2} />
+              <Text>Usuario: eduazuara0@gmail.com</Text>
+              <Divider style={styles.divider2} />
+              <Text>Foto de perfil</Text>
+              <Avatar.Image size={100} style={styles.img} source={require('../../../assets/img/chatbot/perfil.png')} />
+              <Divider style={styles.divider2} />
+              <TextInput
+                label="Comentario"
+                value={comentatio}
+                onChangeText={text => setComentatio(text)}
+                style={styles.textinput}
+              />
+              <Text>Puntuación</Text>
+              <AirbnbRating size={20} showRating={false} onFinishRating={(value) => setPuntuación(value)} />
+            </Dialog.Content>
+            <Dialog.Actions>
+              <Button onPress={close}>Cancelar</Button>
+              <Button onPress={enviarComentario}>Agregar</Button>
+            </Dialog.Actions>
+          </Dialog>
+        </Portal>
+
         {/* COMENTARIOS */}
         <Card style={styles.card}>
           <Card.Title title="Comentarios" />
@@ -37,7 +80,7 @@ const Thematic  = ({ navigation }) => {
               icon="comment-text-multiple"
               mode="contained"
               style={styles.button}
-              onPress={() => navigation.navigate("Tematicas")}
+              onPress={open}
             >
               Agregar comentario
             </Button>
@@ -47,7 +90,7 @@ const Thematic  = ({ navigation }) => {
             <Card.Content>
               <Card.Title
                 title="eduazuara0@gmail.com"
-                subtitle={<AirbnbRating size={20} showRating={false} defaultRating={2}/>}
+                subtitle={<AirbnbRating size={20} showRating={false} defaultRating={2} />}
                 left={(props) => (
                   <Avatar.Image
                     {...props}
@@ -57,8 +100,6 @@ const Thematic  = ({ navigation }) => {
                 )}
               />
               <Text variant="bodyMedium">Contenido del comentario</Text>
-
-
             </Card.Content>
           </Card>
         </Card>
@@ -97,6 +138,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     // margin: 20,
   },
+  title: {
+    textAlign: "center"
+  },
+  divider2: {
+    marginTop: 20,
+    marginBottom: 20
+  },
+  img: {
+    alignSelf: 'center'
+  },
+  textinput: {
+    marginBottom:10
+  }
 });
 
-export default Thematic ;
+export default Thematic;
