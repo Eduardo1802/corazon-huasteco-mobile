@@ -165,17 +165,17 @@ const Store = ({ navigation }) => {
         {/* <Divider style={{marginTop:10}}/> */}
 
         {/* PRODUCTOS */}
-        <Card style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+        <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, borderStyle: "solid", borderWidth: 2, borderColor: "#E7E2E8", borderRadius:15}}>
           <Card.Cover
             source={{
               uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/productos%2F1684462760728?alt=media&token=0651d14c-2663-40b9-9190-9f32315567a4&_gl=1*46jhgd*_ga*NjQ4NjA4NzUxLjE2OTU0NjExOTc.*_ga_CW55HF8NVT*MTY5Njg4NjUwNC4xMy4xLjE2OTY4ODY1MjQuNDAuMC4w",
             }}
-            style={{ width: 151 }}
+            style={{ width: 100, height: "auto"}}
           />
-          <View style={{ flex: 1, flexDirection: 'column', padding: 10 }}>
+          <View style={{ display: "flex", flexDirection: 'column', justifyContent: "space-around", alignContent: "flex-start", width: "70%",  padding: 10 }}>
             <Text variant="bodyLarge" style={styles.title}>TORTILLERO COLOR ROJO</Text>
-            {/* <Text variant="bodyMedium">Tortillero de barro color cafe originario de Chililico, Huejutla de Reyes Hidalgo....</Text> */}
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <Text variant="bodyMedium" style={{paddingBottom: 3}}>Tortillero de barro color cafe originario de Chililico, Huejutla de Reyes Hidalgo....</Text>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
               <Button
                 icon="chevron-right"
                 contentStyle={{ flexDirection: 'row-reverse' }}
@@ -193,7 +193,7 @@ const Store = ({ navigation }) => {
               </Button>
             </View>
           </View>
-        </Card>
+        </View>
       </View>
     </ScrollView>
   );
@@ -243,8 +243,12 @@ const styles = StyleSheet.create({
     margin: 10
   },
   title: {
-    textAlign: "center",
-    marginTop: 10
+    display: 'flex',
+    flexWrap: 'wrap',
+    flexDirection: 'column',
+    flexGrow: 1,
+    
+    // marginTop: 10
   },
   folder: {
     marginTop: 20
