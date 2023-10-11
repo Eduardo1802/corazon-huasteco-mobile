@@ -1,18 +1,40 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { Button, IconButton, Text, TextInput } from "react-native-paper";
-import Icon from "@mdi/react";
-import { mdiGoogle } from "@mdi/js";
+import { Button, Text, TextInput } from "react-native-paper";
+import { useAuth } from "../../context/AuthContext";
+// 
 
 const Acceso = ({ navigation }) => {
   const [gmail, setGmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const { loginWithGoogle } = useAuth();
+  const { login } = useAuth();
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-
+  const handleSubmit = async ()=>{
+    try {
+      const result = await login(gmail, pass);
+      // Espera a que el usuario inicie sesión con Google y luego obtén el resultado.
+     console.log(result)
+      // El usuario ha iniciado sesión con Google. Puedes acceder a la información del usuario en `result.user`.
+    } catch (error) {
+      // Maneja errores aquí.
+      console.error("Error al iniciar sesión con Google:", error);
+    }
+  }
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await loginWithGoogle();
+      // Espera a que el usuario inicie sesión con Google y luego obtén el resultado.
+     console.log(result)
+      // El usuario ha iniciado sesión con Google. Puedes acceder a la información del usuario en `result.user`.
+    } catch (error) {
+      // Maneja errores aquí.
+      console.error("Error al iniciar sesión con Google:", error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text variant="displayMedium">Entra a tu cuenta</Text>
@@ -56,7 +78,7 @@ const Acceso = ({ navigation }) => {
         <Button
           mode="contained"
           style={styles.sendbutton}
-          onPress={() => console.log("Pressed")}
+          onPress={handleSubmit}
         >
           Enviar
         </Button>
@@ -70,7 +92,7 @@ const Acceso = ({ navigation }) => {
           icon="google"
           mode="outlined"
           style={styles.googlebutton}
-          onPress={() => console.log("Pressed")}
+          onPress={handleGoogleLogin} // Llama a la función handleGoogleLogin cuando se presiona el botón
         >
           Continuar con Google
         </Button>
