@@ -8,6 +8,11 @@ import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Thematic/Thematic";
 import SobreNosotros from '../screens/AboutUs/SobreNosotros';
+import Notify from "../screens/Notify/Notify";
+import Contactanos from "../screens/Contact us/Contactus";
+import Terms from "../screens/Terms of use/TermsOfUse";
+import Privacidad from "../screens/Privacity/Privacity";
+import AcercaDe from "../screens/about/About";
 import ChatBot from '../screens/ChatBot/ChatBot';
 import { createStackNavigator } from "@react-navigation/stack";
 import { Logo } from "../components/customs/Logo";
@@ -91,6 +96,70 @@ export function HomeStackScreen() {
       />
 
       <Stack.Screen name="SobreNosotros" component={SobreNosotros} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+
+<Stack.Screen name="Notificaciones" component={Notify} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+      <Stack.Screen name="AcercaDe" component={AcercaDe} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+
+<Stack.Screen name="Terms" component={Terms} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+
+<Stack.Screen name="Privacidad" component={Privacidad} 
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left" 
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+
+<Stack.Screen name="Contactanos" component={Contactanos} 
         options={({ navigation }) => ({
           title: '',
           headerLeft: () => (

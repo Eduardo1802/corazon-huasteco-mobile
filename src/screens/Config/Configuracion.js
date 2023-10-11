@@ -42,30 +42,44 @@ export const Configuracion = ({navigation}) => {
             <Text style={{ flex: 1, textAlign: 'right', color: 'black'}}> WiFi</Text>
           </View>
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('Notificaciones')}>
           <List.Item 
               title="Notificaciones" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
+          </TouchableOpacity>
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('AcercaDe')}>
           <List.Item 
               title="Acerca de" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
+            </TouchableOpacity>
+
+            
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('Terms')}>
           <List.Item 
               title="Terminos de uso" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
+            </TouchableOpacity>
+
+          
+
+
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('Privacidad')}>
           <List.Item 
               title="Privacidad" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
-          <Divider style={styles.dividerStyle}/>
+            </TouchableOpacity>
+            <Divider style={styles.dividerStyle}/>
           <TouchableOpacity onPress={() => navigation.navigate('SobreNosotros')}>
             <List.Item 
                 title="Sobre nosotros" 
@@ -74,11 +88,13 @@ export const Configuracion = ({navigation}) => {
               />
           </TouchableOpacity>
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('Contactanos')}>
           <List.Item 
               title="Contactanos" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
+            </TouchableOpacity>
           <Divider style={styles.dividerStyle}/>
           <TouchableOpacity onPress={() => navigation.navigate('ChatBot')}>  
           <List.Item
