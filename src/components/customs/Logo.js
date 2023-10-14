@@ -5,16 +5,16 @@ import { View, Image, StyleSheet } from 'react-native';
 
 export const Logo = () => {
   return (
-    
+      
       <Image source={logo} style={styles.logo} />
-    
+
   )
 }
 
 const styles = StyleSheet.create({
   logo: {
-    width: 50,
-    height: 50,
-    resizeMode: 'cover',
+    width: 46,
+    height: 46,
+    resizeMode: 'cover'
   },
 });

@@ -81,13 +81,13 @@ export const Configuracion = ({navigation}) => {
             />
             </TouchableOpacity>
             <Divider style={styles.dividerStyle}/>
-          <TouchableOpacity onPress={() => navigation.navigate('SobreNosotros')}>
+          {/* <TouchableOpacity onPress={() => navigation.navigate('SobreNosotros')}>
             <List.Item 
                 title="Sobre nosotros" 
                 titleStyle={{ color: 'black', fontWeight: 'bold' }}
                 left={() => <List.Icon icon="folder" />}
               />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <Divider style={styles.dividerStyle}/>
           <TouchableOpacity onPress={() => navigation.navigate('Contactanos')}>
           <List.Item 
@@ -98,14 +98,14 @@ export const Configuracion = ({navigation}) => {
             </TouchableOpacity>
           
           <Divider style={styles.dividerStyle}/>
-          <TouchableOpacity onPress={() => navigation.navigate('ChatBot')}>  
+          {/* <TouchableOpacity onPress={() => navigation.navigate('ChatBot')}>  
           <List.Item
             title="Chatbot"
             titleStyle={{ color: 'black', fontWeight: 'bold' }}
             left={() => <List.Icon icon="folder"/>}
           />
           <Divider style={styles.dividerStyle}/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         </List.Section>
       </View>
     </ScrollView>

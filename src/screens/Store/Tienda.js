@@ -1,17 +1,11 @@
 import React from 'react'
 import { StyleSheet, View, ScrollView } from 'react-native'
-import { Button, Text, Card, Searchbar, IconButton, Portal, Dialog, Avatar, Divider, List, Checkbox } from 'react-native-paper'
+import { Button, Text, Card, Searchbar, IconButton, Portal, Dialog, Avatar, Divider, List, Checkbox, Badge  } from 'react-native-paper'
 
-const Store = ({ navigation }) => {
+const Tienda = ({ navigation }) => {
   // Buscador
   const [searchQuery, setSearchQuery] = React.useState('');
   const onChangeSearch = query => setSearchQuery(query);
-
-  // Ventana emergente carrito de compras
-  const [visibleCarrito, setVisibleCarrito] = React.useState(false);
-  const closeCarrito = () => setVisibleCarrito(false);
-  const openCarrito = () => setVisibleCarrito(true);
-
   // Ventana emergente filtros
   const [visibleFiltros, setVisibleFiltros] = React.useState(false);
   const closefiltros = () => setVisibleFiltros(false);
@@ -38,15 +32,6 @@ const Store = ({ navigation }) => {
               value={searchQuery}
               style={styles.searchbar}
             />
-            <View style={styles.buttonContainer}>
-              <IconButton
-                icon="cart"
-                onPress={openCarrito}
-                color="#531949"
-                size={30}
-                style={styles.button}
-              />
-            </View>
           </View>
           <Button
             icon="checkbox-marked-circle-outline"
@@ -56,31 +41,6 @@ const Store = ({ navigation }) => {
             Filtros
           </Button>
         </Card>
-
-        {/* DAR CLICK EN EL CARRITO */}
-        <Portal>
-          <Dialog visible={visibleCarrito} onDismiss={closeCarrito}>
-            <Dialog.Title style={styles.title}>
-              Carrito de compras
-            </Dialog.Title>
-            <Dialog.Content>
-              <Card.Title
-                title="Producto"
-                titleStyle={{ color: "#531949" }}
-                left={(props) => (
-                  <Avatar.Icon {...props} size={44} icon="cart" />
-                )}
-              />
-              <Divider />
-              <Text style={{ margin: 20, textAlign: 'right' }}>Total: 59.99</Text>
-              <Divider />
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={closeCarrito}>Cancelar</Button>
-              <Button>Siguiente</Button>
-            </Dialog.Actions>
-          </Dialog>
-        </Portal>
 
         {/* DAR CLICK EN FILTROS */}
         <Portal>
@@ -162,7 +122,6 @@ const Store = ({ navigation }) => {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-        {/* <Divider style={{marginTop:10}}/> */}
 
         {/* PRODUCTOS */}
         <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, borderStyle: "solid", borderWidth: 2, borderColor: "#E7E2E8", borderRadius:15}}>
@@ -180,7 +139,7 @@ const Store = ({ navigation }) => {
                 icon="chevron-right"
                 contentStyle={{ flexDirection: 'row-reverse' }}
                 style={styles.buttonProduct}
-                onPress={() => console.log('ver')}
+                onPress={() => navigation.navigate("Producto")}
               >
                 Ver
               </Button>
@@ -208,15 +167,10 @@ const styles = StyleSheet.create({
   buttonProduct: {
     borderWidth: 0.5,
     borderColor: '#531949',
-    // borderRadius: 30,
-    // padding: 5,
-    // margin: 10
   },
   card: {
     marginTop: 10
   },
-
-
   searchBarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -224,10 +178,6 @@ const styles = StyleSheet.create({
   },
   searchbar: {
     flex: 1,
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    marginLeft: 5,
   },
   button: {
     borderWidth: 0.5,
@@ -247,8 +197,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     flexDirection: 'column',
     flexGrow: 1,
-    
-    // marginTop: 10
   },
   folder: {
     marginTop: 20
@@ -258,4 +206,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Store;
+export default Tienda;
