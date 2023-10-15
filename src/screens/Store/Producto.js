@@ -97,6 +97,29 @@ const Producto = () => {
         </View>
 
         
+{/* Testimonios */}
+<Card style={{ margin: 20 }}>
+          <Card.Title
+            title="Testimonios"
+            titleStyle={styles.title}
+          />
+          {/* Persona */}
+          <Card style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}>
+            <Card.Content>
+              <Card.Title
+                title={<Text>Great product</Text>}
+                left={(props) => (
+                  <Avatar.Image
+                    size={44}
+                    source={require("../../../assets/img/chatbot/perfil.png")}
+                  />
+                  // <Avatar.Text size={44} label="R" />
+                )}
+              />
+              <Text style={{ textAlign: 'justify' }}>Remy Sharp — Despite seeing no many bad reviews on them coming in broken , I took the risk and happy I did. I got the 8 piece and they were all in perfect condition. Thanks!</Text>
+            </Card.Content>
+          </Card>
+        </Card>
       </View>
     </ScrollView>
   );
