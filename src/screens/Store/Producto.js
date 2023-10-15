@@ -49,7 +49,7 @@ const Producto = () => {
               key={index}
               style={[
                 styles.dot,
-                { color: index === currentIndex ? 'black' : 'lightgray' },
+                { color: index === currentIndex ? '#531949' : 'lightgray' },
               ]}
             >
               ⬤
