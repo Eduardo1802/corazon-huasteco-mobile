@@ -1,6 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, ScrollView } from 'react-native'
-import { Button, Text, Card, Searchbar, IconButton, Portal, Dialog, Avatar, Divider, List, Checkbox, Badge  } from 'react-native-paper'
+import { Button, Text, Card, Searchbar, Portal, Dialog, List, Checkbox } from 'react-native-paper'
 
 const Tienda = ({ navigation }) => {
   // Buscador
