@@ -1,16 +1,70 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Button, Card, Text } from "react-native-paper";
 import baseImage from '../../../assets/img/app/image-preview.png'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { app } from '../../config/firebase'
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 
 const Inicio = ({ navigation }) => {
 
-  const data = [{title: "Todo lo que debes saber acerca de las vestimentas tradicionales", time: "Hace 1 hora", img: baseImage},{title: "Xantolo, ¿Qué debes hacer cuando ya está cerca esta fecha?", time: "Hace 1 dia", img: baseImage}, {title: "Los bailes tipicos de la huasteca hidalguense", time: "Hace 1 semana", img: baseImage}, {title: "Todo lo que debes saber acerca de las vestimentas tradicionales", time: "Hace 1 hora", img: baseImage},{title: "Xantolo, ¿Qué debes hacer cuando ya está cerca esta fecha?", time: "Hace 1 dia", img: baseImage}];
+  const obtenerDatosDeFirebase = async () => {
+    try {
+      const productoSnapshot = await app.firestore().collection("producto").get();
+      const productoData = productoSnapshot.docs.map((doc) => doc.data());
+
+      const tematicasSnapshot = await app.firestore().collection("tematicas").get();
+      const tematicasData = tematicasSnapshot.docs.map((doc) => doc.data());
+      
+      const usuariosSnapshot = await app.firestore().collection("usuarios").get();
+      const usuariosData = usuariosSnapshot.docs.map((doc) => doc.data());
+
+      const usuarioCorreoSnapshot = await app.firestore().collection("usuarios").get();
+      const usuariosCorreoData = usuarioCorreoSnapshot.docs.map((doc) => doc.data());
+
+      const datosCombinados = {
+        producto: productoData,
+        tematicas: tematicasData,
+        usuarios: usuariosData,
+        usuarios_correo: usuariosCorreoData
+      };
+      // console.log(datosCombinados)
+      guardarDatosLocalmente(datosCombinados);
+    }catch (error) {
+      console.error("Error al obtener datos de Firebase:", error);
+    }
+  }
+
+  const guardarDatosLocalmente = async (data) => {
+    try {
+      const existingData = await AsyncStorage.getItem("datosLocal");
+      if (existingData) {
+        console.log("Los datos ya existen en el almacenamiento local.");
+        return;
+      }
+      const dataString = JSON.stringify(data);
+      await AsyncStorage.setItem("datosLocal", dataString);
+      console.log("Datos guardados localmente.");
+    } catch (error) {
+      console.error("Error al guardar datos localmente:", error);
+    }
+  }
+  
+  const eliminarDatosLocalmente = async () => {
+    try {
+      await AsyncStorage.removeItem("datosLocal");
+      console.log("Datos eliminados del almacenamiento local.");
+    } catch (error) {
+      console.error("Error al eliminar datos localmente:", error);
+    }
+  }
+  
+  useEffect(() => {
+    obtenerDatosDeFirebase();
+  }, []);
 
   return (
     <ScrollView>
@@ -18,90 +72,6 @@ const Inicio = ({ navigation }) => {
         <Text variant="headlineSmall" style={styles.title}>
           La Huasteca Hidalguense
         </Text>
-
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.slider}
-        >
-          {data.map((item, index) => (
-            <View key={index} style={styles.slide}>
-              <Card mode="contained" style={styles.card}>
-                <Card.Cover source={item.img} />
-                <Card.Content>
-                  <Text variant="bodyMedium">{item.time}</Text>
-                  <Text variant="titleLarge">{item.title.slice(0, 40)}...</Text>
-                </Card.Content>
-              </Card>
-            </View>
-          ))}
-        </ScrollView>
-
-        <Card mode="contained" style={styles.card}>
-          {/* <Card.Title title="Card Title" subtitle="Card Subtitle"/> */}
-          <Card.Cover source={baseImage} onPress={()=> alert("hello there")}/>
-          <Card.Content>
-            <Text variant="bodyMedium">Hace 1 hora</Text>
-            <Text variant="titleLarge">Todo lo que debes saber a cerca de las vestimentas tradicionales</Text>
-          </Card.Content>
-        </Card>
-        
-        <Card mode="contained" style={styles.card}>
-          {/* <Card.Title title="Card Title" subtitle="Card Subtitle"/> */}
-          <Card.Cover source={baseImage} />
-          <Card.Content>
-            <Text variant="bodyMedium">Hace 1 hora</Text>
-            <Text variant="titleLarge">Todo lo que debes saber a cerca de las vestimentas tradicionales</Text>
-          </Card.Content>
-        </Card>
-        
-        <Card mode="contained" style={styles.card}>
-          {/* <Card.Title title="Card Title" subtitle="Card Subtitle"/> */}
-          <Card.Cover source={baseImage} />
-          <Card.Content>
-            <Text variant="bodyMedium">Hace 1 hora</Text>
-            <Text variant="titleLarge">Todo lo que debes saber a cerca de las vestimentas tradicionales</Text>
-          </Card.Content>
-        </Card>
-        
-        <ScrollView
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.slider}
-        >
-          {data.map((item, index) => (
-            <View key={index} style={styles.slide}>
-              <Card mode="contained" style={styles.card}>
-                <Card.Cover source={item.img} />
-                <Card.Content>
-                  <Text variant="bodyMedium">{item.time}</Text>
-                  <Text variant="titleLarge">{item.title.slice(0, 40)}...</Text>
-                </Card.Content>
-              </Card>
-            </View>
-          ))}
-        </ScrollView>
-
-        {/* <Button
-          mode="contained"
-          icon="information"
-          onPress={() => navigation.navigate('Recientes')}
-        >Sobre nosotros</Button>
-        
-        <Button
-          mode="contained"
-          icon="information"
-          onPress={() => navigation.navigate('elder')}
-        >Hola buen día Elder</Button>
-
-        <Button
-          mode="outlined"
-          icon="comment-question"
-          onPress={() => navigation.navigate('Preguntas Frecuentes')}
-
-        >Preguntas frecuentes</Button> */}
       </View>
     </ScrollView>
   );
@@ -111,23 +81,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     padding: 3,
-  },
-
-  title:{
-    fontWeight: 700,
-    marginBottom: 10,
-  },
-
-  slider: {
-    flexDirection: 'row',
-  },
-  slide: {
-    width: 300, // Ancho de cada slide
-    padding: 3
-  },
-  card: {
-    marginHorizontal: 3,
-    marginVertical: 5,
   },
 });
 

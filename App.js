@@ -6,6 +6,8 @@ import {
 } from "react-native-paper";
 import Navigation from "./src/navigation/Navigation";
 import { AuthProvider } from "./src/context/AuthContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function App() {
   const customColors = {
     primary: "#531949",

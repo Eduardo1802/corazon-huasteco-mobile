@@ -1,23 +1,51 @@
-import React from 'react'
+import React, { useEffect, useState } from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, ScrollView } from 'react-native'
 import { Button, Text, Card, Searchbar, Portal, Dialog, List, Checkbox } from 'react-native-paper'
+import { app } from '../../config/firebase'
 
 const Tienda = ({ navigation }) => {
   // Buscador
-  const [searchQuery, setSearchQuery] = React.useState('');
+  const [searchQuery, setSearchQuery] = useState('');
   const onChangeSearch = query => setSearchQuery(query);
   // Ventana emergente filtros
-  const [visibleFiltros, setVisibleFiltros] = React.useState(false);
+  const [visibleFiltros, setVisibleFiltros] = useState(false);
   const closefiltros = () => setVisibleFiltros(false);
   const openfiltros = () => setVisibleFiltros(true);
   // Categoria
-  const [portavela, setPortavela] = React.useState(false);
-  const [plato, setPlato] = React.useState(false);
-  const [tequilero, setTequilero] = React.useState(false);
+  const [portavela, setPortavela] = useState(false);
+  const [plato, setPlato] = useState(false);
+  const [tequilero, setTequilero] = useState(false);
   // Color
-  const [rojo, setRojo] = React.useState(false);
-  const [blanco, setBlanco] = React.useState(false);
-  const [azul, setAzul] = React.useState(false);
+  const [rojo, setRojo] = useState(false);
+  const [blanco, setBlanco] = useState(false);
+  const [azul, setAzul] = useState(false);
+
+  // recuperarDatosLocalmente
+  const [productos, setProductos] = useState([]);
+
+  const recuperarDatosLocalmente = async () => {
+    try {
+      const datos = await AsyncStorage.getItem('datosLocal');
+      if (datos !== null) {
+        const datosParseados = JSON.parse(datos);
+        const datosTabla = datosParseados.producto;
+        setProductos(datosTabla)
+        console.log("Datos obtenidos del Storage.")
+      }else{
+        const productoSnapshot = await app.firestore().collection("producto").get();
+        const productoData = productoSnapshot.docs.map((doc) => doc.data());
+        setProductos(productoData)
+        console.log("Datos obtenidos de firebase.")
+      }
+    } catch (error) {
+      console.error('Error al recuperar datos locales:', error);
+    }
+  }
+
+  useEffect(() => {
+    recuperarDatosLocalmente();
+  }, []);
 
   return (
     <ScrollView>
@@ -123,36 +151,39 @@ const Tienda = ({ navigation }) => {
           </Dialog>
         </Portal>
 
-        {/* PRODUCTOS */}
-        <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10, borderStyle: "solid", borderWidth: 2, borderColor: "#E7E2E8", borderRadius:15}}>
-          <Card.Cover
-            source={{
-              uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/productos%2F1684462760728?alt=media&token=0651d14c-2663-40b9-9190-9f32315567a4&_gl=1*46jhgd*_ga*NjQ4NjA4NzUxLjE2OTU0NjExOTc.*_ga_CW55HF8NVT*MTY5Njg4NjUwNC4xMy4xLjE2OTY4ODY1MjQuNDAuMC4w",
-            }}
-            style={{ width: 100, height: "auto"}}
-          />
-          <View style={{ display: "flex", flexDirection: 'column', justifyContent: "space-around", alignContent: "flex-start", width: "70%",  padding: 10 }}>
-            <Text variant="bodyLarge" style={styles.title}>TORTILLERO COLOR ROJO</Text>
-            <Text variant="bodyMedium" style={{paddingBottom: 3}}>Tortillero de barro color cafe originario de Chililico, Huejutla de Reyes Hidalgo....</Text>
-            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-              <Button
-                icon="chevron-right"
-                contentStyle={{ flexDirection: 'row-reverse' }}
-                style={styles.buttonProduct}
-                onPress={() => navigation.navigate("Producto")}
-              >
-                Ver
-              </Button>
-              <Button
-                icon="cart"
-                contentStyle={{ flexDirection: 'row-reverse' }}
-                style={styles.buttonProduct}
-              >
-                Añadir
-              </Button>
+        {productos.map((producto, index) => (
+          <View key={index} style={{ display: 'flex', flexDirection: 'row', marginTop: 10, borderStyle: "solid", borderWidth: 2, borderColor: "#E7E2E8", borderRadius: 15 }}>
+            <Card.Cover
+              source={{
+                uri: producto.url, 
+              }}
+              style={{ width: 100, height: "auto" }}
+            />
+            <View style={{ display: "flex", flexDirection: 'column', justifyContent: "space-around", alignContent: "flex-start", width: "70%", padding: 10 }}>
+              <Text variant="bodyLarge" style={styles.title}>{producto.nombre}</Text> 
+              <Text variant="bodyMedium" style={{ paddingBottom: 3 }}>{producto.descripcion}</Text> 
+              <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <Button
+                  icon="chevron-right"
+                  contentStyle={{ flexDirection: 'row-reverse' }}
+                  style={styles.buttonProduct}
+                  onPress={() => navigation.navigate("Producto")}
+                >
+                  Ver
+                </Button>
+                <Button
+                  icon="cart"
+                  contentStyle={{ flexDirection: 'row-reverse' }}
+                  style={styles.buttonProduct}
+                >
+                  Añadir
+                </Button>
+              </View>
             </View>
           </View>
-        </View>
+        ))}
+
+
       </View>
     </ScrollView>
   );
