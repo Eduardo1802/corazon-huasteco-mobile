@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
 import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
 import { Button, Text, Card, Divider, Avatar } from 'react-native-paper'
 
@@ -6,6 +7,8 @@ import { Button, Text, Card, Divider, Avatar } from 'react-native-paper'
 const windowWidth = Dimensions.get('window').width;
 
 const Producto = () => {
+  const route = useRoute();
+  const { item } = route.params; 
   const scrollViewRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -16,9 +19,9 @@ const Producto = () => {
   };
 
   const imageUrls = [
-    'https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/productos%2F1684462760728?alt=media&token=0651d14c-2663-40b9-9190-9f32315567a4',
-    'https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/productos%2F1684462760728?alt=media&token=0651d14c-2663-40b9-9190-9f32315567a4',
-    'https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/productos%2F1684462760728?alt=media&token=0651d14c-2663-40b9-9190-9f32315567a4',
+    item.url,
+    item.url,
+    item.url,
   ];
 
   const renderImages = () => {
@@ -61,17 +64,17 @@ const Producto = () => {
         <View style={styles.viewContent}>
           <Card>
             <Card.Title
-              title="TORTILLERO COLOR ROJO"
-              subtitle="$139.99 MXN"
+              title={item.nombre}
+              subtitle={'$'+item.costo}
               titleStyle={styles.title}
               subtitleStyle={{ textAlign: 'center' }}
             />
             <Card.Content style={styles.cardContent}>
               <Text variant="bodyMedium" style={{ textAlign: 'center' }}>
-                Tortillero de barro color cafe originario de Chililico, Huejutla de Reyes Hidalgo.
+                {item.descripcion}
               </Text>
               <Text style={{ marginTop: 10 }}>Categoría(s):</Text>
-              <Button style={styles.button}>Tortillero</Button>
+              <Button style={styles.button}>{item.categoria}</Button>
             </Card.Content>
             <Divider style={{ margin: 5 }} />
             <Card.Content style={styles.cardContent}>

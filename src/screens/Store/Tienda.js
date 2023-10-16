@@ -168,7 +168,10 @@ const Tienda = ({ navigation }) => {
                   icon="chevron-right"
                   contentStyle={{ flexDirection: 'row-reverse' }}
                   style={styles.buttonProduct}
-                  onPress={() => navigation.navigate("Producto")}
+                  onPress={() =>
+                    navigation.navigate("Producto", { item: producto })
+                  }
+                  // onPress={() => navigation.navigate("Producto")}
                 >
                   Ver
                 </Button>

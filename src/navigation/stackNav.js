@@ -262,7 +262,7 @@ export function StoreStackScreen() {
         })}
       />
       <Stack.Screen name="Producto" component={Producto}
-        options={({ navigation }) => ({
+        options={({ route }) => ({
           title: '',
           headerRight: () => (
             <Carrito />
