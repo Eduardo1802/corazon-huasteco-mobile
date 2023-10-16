@@ -31,12 +31,12 @@ const Tienda = ({ navigation }) => {
         const datosParseados = JSON.parse(datos);
         const datosTabla = datosParseados.producto;
         setProductos(datosTabla)
-        console.log("Datos obtenidos del Storage.")
+        console.log("Productos obtenidos del Storage.")
       }else{
         const productoSnapshot = await app.firestore().collection("producto").get();
         const productoData = productoSnapshot.docs.map((doc) => doc.data());
         setProductos(productoData)
-        console.log("Datos obtenidos de firebase.")
+        console.log("Productos obtenidos de firebase.")
       }
     } catch (error) {
       console.error('Error al recuperar datos locales:', error);
