@@ -34,7 +34,7 @@ const Articles = ({ navigation }) => {
         )}
 
         {value === "todos" && (
-          <Todos/>
+          <Todos navigation={navigation}/>
         )}
       </View>
     </ScrollView>

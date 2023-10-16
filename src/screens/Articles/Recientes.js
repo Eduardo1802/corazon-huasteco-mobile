@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Card, Text, Button } from "react-native-paper";
 import { app } from "../../config/firebase";
 
@@ -45,9 +45,9 @@ const Recientes = ({ navigation }) => {
         tradicionesConFechas.sort((a, b) => a.diferenciaDias - b.diferenciaDias);
         // console.log(tradicionesConFechas)
         setTematicasfecha(tradicionesConFechas);
-        console.log("Temáticas recientes obtenidas del Storage.");
+        console.log("Temáticas sección recientes obtenidas del Storage.");
       } else {
-        console.log("Temáticas recientes obtenidos de firebase.");
+        console.log("Temáticas sección recientes obtenidos de firebase.");
       }
     } catch (error) {
       console.error("Error al recuperar datos locales:", error);
@@ -60,8 +60,8 @@ const Recientes = ({ navigation }) => {
 
   return (
     <>
-      {tematicasfecha.map((producto) => (
-        <View>
+      {tematicasfecha.map((producto, index) => (
+        <View key={index}>
           {producto && (
             <Card style={{ marginTop: 20 }}>
               <Card.Content>
@@ -89,7 +89,7 @@ const Recientes = ({ navigation }) => {
                   mode="contained"
                   style={styles.button}
                 >
-                  Descargar artículo
+                  Guardar artículo
                 </Button>
               </Card.Content>
             </Card>
