@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
 import Todos from './Todos'
@@ -6,7 +6,9 @@ import Recientes from './Recientes'
 import ChatBot from '../ChatBot/ChatBot'
 
 const Articles = ({ navigation }) => {
-  const [value, setValue] = React.useState("recientes");
+  const [value, setValue] = useState("recientes");
+  // RecuperarDatosLocalmente
+  const [tematicas, setTematicas] = useState([]);
 
   return (
     <ScrollView>

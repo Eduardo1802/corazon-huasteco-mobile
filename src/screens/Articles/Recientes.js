@@ -80,7 +80,7 @@ const Recientes = ({ navigation }) => {
                   icon="text-box"
                   mode="contained"
                   style={styles.button}
-                  onPress={() => navigation.navigate("Tematicas")}
+                  onPress={() => navigation.navigate("Tematicas", { item: producto.item })}
                 >
                   Leer artículo
                 </Button>

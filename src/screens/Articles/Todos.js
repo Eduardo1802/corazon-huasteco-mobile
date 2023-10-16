@@ -58,12 +58,15 @@ const Todos = ({ navigation }) => {
       if (datos !== null) {
         const datosParseados = JSON.parse(datos);
         const datosTabla = datosParseados.tematicas;
-        setTematicas(datosTabla)
+        setTematicas(datosTabla);
         console.log("Temáticas sección todos obtenidas del Storage.");
       } else {
-        const tematicasSnapshot = await app.firestore().collection("producto").get();
+        const tematicasSnapshot = await app
+          .firestore()
+          .collection("producto")
+          .get();
         const tematicasData = tematicasSnapshot.docs.map((doc) => doc.data());
-        setTematicas(tematicasData)
+        setTematicas(tematicasData);
         console.log("Temáticas sección todos obtenidas de firebase.");
       }
     } catch (error) {
@@ -198,7 +201,7 @@ const Todos = ({ navigation }) => {
           <Card.Content>
             <Card.Cover
               source={{
-                uri: producto.imgPortada
+                uri: producto.imgPortada,
               }}
             />
             <Text variant="titleLarge" style={styles.text}>
@@ -211,7 +214,9 @@ const Todos = ({ navigation }) => {
               icon="text-box"
               mode="contained"
               style={styles.button}
-              onPress={() => navigation.navigate("Tematicas")}
+              onPress={() =>
+                navigation.navigate("Tematicas", { item: producto })
+              }
             >
               Leer artículo
             </Button>

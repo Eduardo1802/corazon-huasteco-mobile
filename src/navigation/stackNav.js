@@ -213,14 +213,18 @@ export function HomeStackScreen() {
 export function ArticlesStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="RecientesHome" component={Articulos}
+      <Stack.Screen 
+        name="RecientesHome" 
+        component={Articulos}
         options={({ navigation }) => ({
           title: 'Artículos',
         })}
       />
 
-      <Stack.Screen name="Tematicas" component={Tematicas}
-        options={({ navigation }) => ({
+      <Stack.Screen 
+        name="Tematicas" 
+        component={Tematicas}
+        options={({ route }) => ({
           title: '',
         })}
       />

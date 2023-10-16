@@ -30,6 +30,7 @@ const Tienda = ({ navigation }) => {
       if (datos !== null) {
         const datosParseados = JSON.parse(datos);
         const datosTabla = datosParseados.producto;
+        // console.log(datosTabla)
         setProductos(datosTabla)
         console.log("Productos obtenidos del Storage.")
       }else{
