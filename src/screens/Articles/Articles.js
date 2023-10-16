@@ -3,6 +3,7 @@ import { StyleSheet, View, SafeAreaView, ScrollView } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
 import Todos from './Todos'
 import Recientes from './Recientes'
+import ChatBot from '../ChatBot/ChatBot'
 
 const Articles = ({ navigation }) => {
   const [value, setValue] = React.useState("recientes");
@@ -25,6 +26,11 @@ const Articles = ({ navigation }) => {
                 label: "Todos",
                 icon: "clipboard-text-multiple"
               },
+              {
+                value: "chat",
+                label: "Chat",
+                icon: "clipboard-account"
+              },
             ]}
           />
         </SafeAreaView>
@@ -35,6 +41,9 @@ const Articles = ({ navigation }) => {
 
         {value === "todos" && (
           <Todos navigation={navigation}/>
+        )}
+        {value === "chat" && (
+          <ChatBot/>
         )}
       </View>
     </ScrollView>

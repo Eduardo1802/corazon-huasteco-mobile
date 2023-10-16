@@ -7,15 +7,15 @@ const ChatBot = () => {
   const onChangeSearch = (query) => setSearchQuery(query);
 
   return (
-    <ScrollView>
+    // <ScrollView>
       <View style={styles.container}>
-        <Text variant="displaySmall" style={styles.title}>
+        {/* <Text variant="displaySmall" style={styles.title}>
           Chatbot
-        </Text>
+        </Text> */}
         <Divider />
 
         <Searchbar
-          placeholder="Envia tu pregunta sobre Huejutla"
+          placeholder= "Pregunta sobre los articulos"// "Envia tu pregunta sobre Huejutla"
           icon="send"
           onChangeText={onChangeSearch}
           value={searchQuery}
@@ -55,7 +55,7 @@ const ChatBot = () => {
         </Card>
 
       </View>
-    </ScrollView>
+    // </ScrollView>
   );
 };
 
@@ -63,9 +63,9 @@ export default ChatBot;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-    paddingTop: 50,
+    // flex: 1,
+    // padding: 20,
+    paddingTop: 20,
   },
   title: {
     marginBottom: 30
