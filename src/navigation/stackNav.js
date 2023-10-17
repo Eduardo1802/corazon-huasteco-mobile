@@ -8,16 +8,17 @@ import Registro from "../screens/Register/Registro";
 import Guardados from "../screens/Saved/Guardados";
 import Tematicas from "../screens/Thematics/Tematicas";
 import SobreNosotros from '../screens/AboutUs/SobreNosotros';
-import AcercaDe from "../screens/about/About"
+import AcercaDe from "../screens/about/About";
 import Notify from "../screens/Notify/Notify";
-import Contactanos from "../screens/Contact us/Contactus"
-import Terms from "../screens/Terms of use/TermsOfUse"
-import Privacidad from "../screens/Privacity/Privacity"
+import Contactanos from "../screens/Contact us/Contactus";
+import Terms from "../screens/Terms of use/TermsOfUse";
+import Privacidad from "../screens/Privacity/Privacity";
+import Preguntas from "../screens/Question/Questions";
 import ChatBot from '../screens/ChatBot/ChatBot';
 import ArtGuardados from '../screens/ArticlesSaved/ArtGuardados'
-import Producto from '../screens/Store/Producto'
-import Carrito from '../screens/Store/Carrito'
-import Perfil from '../screens/Profile/Perfil'
+import Producto from '../screens/Store/Producto';
+import Carrito from '../screens/Store/Carrito';
+import Perfil from '../screens/Profile/Perfil';
 import { createStackNavigator } from "@react-navigation/stack";
 import { Logo } from "../components/customs/Logo";
 
@@ -132,6 +133,18 @@ export function HomeStackScreen() {
         })}
       />
       <Stack.Screen name="Notificaciones" component={Notify}
+        options={({ navigation }) => ({
+          title: '',
+          headerLeft: () => (
+            <IconButton
+              icon="arrow-left"
+              iconColor="#D9CAAD"
+              onPress={() => navigation.goBack()}
+            />
+          )
+        })}
+      />
+      <Stack.Screen name="Preguntas" component={Preguntas}
         options={({ navigation }) => ({
           title: '',
           headerLeft: () => (

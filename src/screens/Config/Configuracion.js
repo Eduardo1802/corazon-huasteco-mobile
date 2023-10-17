@@ -20,11 +20,13 @@ export const Configuracion = ({navigation}) => {
             <Text style={{ flex: 1, textAlign: 'right', color: 'black'}}> Sincronizar dispositivo</Text>
           </View>
           <Divider style={styles.dividerStyle}/>
+          <TouchableOpacity onPress={() => navigation.navigate('Preguntas')}>
           <List.Item 
               title="Preguntas frecuentes" 
               titleStyle={{ color: 'black', fontWeight: 'bold' }}
               left={() => <List.Icon icon="folder" />}
             />
+            </TouchableOpacity>
           <Divider style={styles.dividerStyle}/>
           <View style={styles.rowContainer}>
             <List.Item title="Descargar nuevas actualizaciones" 
