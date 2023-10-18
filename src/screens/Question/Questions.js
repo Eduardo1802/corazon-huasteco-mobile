@@ -48,6 +48,7 @@ const AccordionExample = () => {
   return (
     <View>
       <Card>
+      <Card>
         <List.Accordion
           title="¿Qué puedo hacer para subir un archivo?"
           left={(props) => (
@@ -211,7 +212,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada l
         <Divider />
       </Card>
 
-      
+      </Card>
     </View>
   );
 };
