@@ -17,7 +17,7 @@ const Guardados = ({ navigation }) => {
       }}
     >
       <Text style={{ textAlign: "center" }}>
-        Para poder guardar artículos, es necesario que inicies sesión.
+        Para poder visualizar tus articulos guardardos, es necesario que inicies sesión.
       </Text>
       <Card.Content>
         <Button
