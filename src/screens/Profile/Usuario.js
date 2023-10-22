@@ -8,8 +8,17 @@ import {
   IconButton,
   TouchableRipple,
 } from "react-native-paper";
-
+import { useAuth } from "../../context/AuthContext"
 const Usuario = ({ navigation, user }) => {
+  const { logout } = useAuth(); 
+  const handleLogout = async() => {
+    try{
+      await logout();
+      navigation.navigate("InicioHome");
+    }catch(error){
+      console.log(error.message);
+    }
+  }
   return (
     <>
       {user && (
@@ -95,7 +104,8 @@ const Usuario = ({ navigation, user }) => {
               icon="login"
               style={styles.buttonClose}
               contentStyle={{ flexDirection: "row-reverse" }}
-              // onPress={() => navigation.navigate("InicioHome")}
+              onPress={handleLogout}
+
             >
               Cerrar Sesión
             </Button>
