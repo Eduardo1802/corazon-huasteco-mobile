@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -16,28 +16,36 @@ import {
   Menu,
 } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
+
 const Registro = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
+  const [nombreError, setNombreError] = useState("");
   const [apellido, setApellido] = useState("");
+  const [apellidoError, setApellidoError] = useState("");
   const [cp, setCp] = useState("");
+  const [cpError, setCpError] = useState("");
   const [estado, setEstado] = useState("");
+  const [estadoError, setEstadoError] = useState(""); // Nuevo estado de error
   const [pregunta, setPregunta] = useState("");
+  const [preguntaError, setPreguntaError] = useState(""); // Nuevo estado de error
   const [respuesta, setRespuesta] = useState("");
   const [gmail, setGmail] = useState("");
+  const [gmailError, setGmailError] = useState("");
   const [pass, setPass] = useState("");
+  const [passError, setPassError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const [checked, setChecked] = React.useState(false);
+  const [checked, setChecked] = useState(false);
   const [selectedSex, setSelectedSex] = useState("");
   const [sexMenuVisible, setSexMenuVisible] = useState(false);
-
+  const [preguntaMenuVisible, setPreguntaMenuVisible] = useState(false);
+  const [respuestaError, setRespuestaError] = useState("");
   const showSexMenu = () => setSexMenuVisible(true);
   const hideSexMenu = () => setSexMenuVisible(false);
   const selectSex = (sex) => {
     setSelectedSex(sex);
     hideSexMenu();
   };
-  const [preguntaMenuVisible, setPreguntaMenuVisible] = useState(false);
 
   const showPreguntaMenu = () => setPreguntaMenuVisible(true);
   const hidePreguntaMenu = () => setPreguntaMenuVisible(false);
@@ -49,7 +57,7 @@ const Registro = ({ navigation }) => {
   const preguntaOptions = [
     "¿Nombre de tu primera mascota?",
     "¿Nombre de tu artista favorito?",
-    "¿Pais donde deseas vivir?",
+    "¿País donde deseas vivir?",
     "¿Comida favorita?",
     "¿Nombre de tu padre o madre?",
   ];
@@ -63,10 +71,113 @@ const Registro = ({ navigation }) => {
     setShowPassword2(!showPassword2);
   };
 
+  // Función para validar el formato del correo electrónico
+  const isEmailValid = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    return emailRegex.test(email);
+  };
+
+  // Función para validar la contraseña
+  const isPasswordValid = (password) => {
+    // La contraseña debe tener al menos 6 caracteres
+    if (password.length < 6) return false;
+    // La contraseña debe tener un mínimo de una letra mayúscula, una letra minúscula, un número y un carácter especial
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!?/-_%$&^])[A-Za-z\d@#$!?/-_%$&^]+$/;
+    return passwordRegex.test(password);
+  };
+
+  useEffect(() => {
+    // Validación del nombre
+    if (nombre.length < 2) {
+      setNombreError("El nombre debe tener al menos 2 caracteres");
+    } else {
+      setNombreError("");
+    }
+
+    // Validación del apellido
+    if (apellido.length < 2) {
+      setApellidoError("El apellido debe tener al menos 2 caracteres");
+    } else {
+      setApellidoError("");
+    }
+
+    // Validación del código postal
+    if (!/^\d{5}$/.test(cp)) {
+      setCpError("El código postal debe tener 5 dígitos numéricos");
+    } else {
+      setCpError("");
+    }
+
+    // Validación del correo electrónico
+    if (!isEmailValid(gmail)) {
+      setGmailError("El correo no es válido");
+    } else {
+      setGmailError("");
+    }
+
+    // Validación de la contraseña
+    if (!isPasswordValid(pass)) {
+      setPassError(
+        "La contraseña debe tener al menos 6 caracteres y cumplir los requisitos"
+      );
+    } else {
+      setPassError("");
+    }
+
+    // Validación del sexo
+    if (selectedSex === "") {
+      setSexMenuVisible(true);
+    } else {
+      setSexMenuVisible(false);
+    }
+
+    // Validación del estado
+    if (estado.trim() === "") {
+      setEstadoError("El estado no puede estar vacío");
+    } else {
+      setEstadoError("");
+    }
+
+    // Validación de la pregunta secreta
+    if (pregunta.trim() === "") {
+      setPreguntaError("Debe seleccionar una pregunta secreta");
+    } else {
+      setPreguntaError("");
+    }
+    // Validación de la respuesta de la pregunta secreta
+    if (respuesta.trim() === "") {
+      setRespuestaError("La respuesta no puede estar vacía");
+    } else {
+      setRespuestaError("");
+    }
+  }, [
+    nombre,
+    apellido,
+    cp,
+    gmail,
+    pass,
+    selectedSex,
+    estado,
+    pregunta,
+    respuesta,
+  ]);
+
+  const formValid =
+    nombreError === "" &&
+    apellidoError === "" &&
+    cpError === "" &&
+    gmailError === "" &&
+    passError === "" &&
+    estadoError === "" &&
+    preguntaError === "" &&
+    respuestaError === "" &&
+    checked;
+
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text variant="displayMedium">Registrate</Text>
+        <Text variant="displayMedium">Regístrate</Text>
         <View style={styles.registrationContainer}>
           <Text variant="titleMedium">¿Ya tienes cuenta? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Acceso")}>
@@ -82,18 +193,24 @@ const Registro = ({ navigation }) => {
               label="Nombre"
               value={nombre}
               mode="outlined"
-              onChangeText={(text) => setNombre(text)}
+              onChangeText={(text) => {
+                setNombre(text);
+              }}
               style={styles.textInput}
             />
+            <Text style={styles.errorText}>{nombreError}</Text>
           </View>
           <View style={styles.halfWidth}>
             <TextInput
               label="Apellido"
               value={apellido}
               mode="outlined"
-              onChangeText={(text) => setApellido(text)}
+              onChangeText={(text) => {
+                setApellido(text);
+              }}
               style={styles.textInput}
             />
+            <Text style={styles.errorText}>{apellidoError}</Text>
           </View>
         </View>
 
@@ -108,10 +225,13 @@ const Registro = ({ navigation }) => {
                 <TextInput.Icon
                   name="chevron-down"
                   onPress={showSexMenu}
-                  style={{ marginRight: -10 }} // Ajusta el margen del ícono
+                  style={{ marginRight: -10 }}
                 />
               }
             />
+            <Text style={styles.errorText}>
+              {selectedSex === "" ? "Este campo es obligatorio" : ""}
+            </Text>
             <Menu
               visible={sexMenuVisible}
               onDismiss={hideSexMenu}
@@ -121,23 +241,26 @@ const Registro = ({ navigation }) => {
                 </Button>
               }
             >
-              {sexoOptions.map((option, index) => (
+              {sexoOptions.map((sex) => (
                 <Menu.Item
-                  key={index}
-                  onPress={() => selectSex(option)}
-                  title={option}
+                  key={sex}
+                  onPress={() => selectSex(sex)}
+                  title={sex}
                 />
               ))}
             </Menu>
           </View>
           <View style={styles.halfWidth}>
             <TextInput
-              label="Código potal"
+              label="Código postal"
               value={cp}
               mode="outlined"
-              onChangeText={(text) => setCp(text)}
+              onChangeText={(text) => {
+                setCp(text);
+              }}
               style={styles.textInput}
             />
+            <Text style={styles.errorText}>{cpError}</Text>
           </View>
         </View>
         <TextInput
@@ -147,13 +270,17 @@ const Registro = ({ navigation }) => {
           onChangeText={(text) => setEstado(text)}
           style={styles.textInput}
         />
+        <Text style={styles.errorText}>{estadoError}</Text>
         <TextInput
           label="Correo"
           value={gmail}
           mode="outlined"
-          onChangeText={(text) => setGmail(text)}
+          onChangeText={(text) => {
+            setGmail(text);
+          }}
           style={styles.textInput}
         />
+        <Text style={styles.errorText}>{gmailError}</Text>
         <TextInput
           label="Contraseña"
           value={pass}
@@ -168,6 +295,7 @@ const Registro = ({ navigation }) => {
             />
           }
         />
+        <Text style={styles.errorText}>{passError}</Text>
         <View style={styles.halfWidth}>
           <TextInput
             label="Pregunta secreta"
@@ -178,10 +306,11 @@ const Registro = ({ navigation }) => {
               <TextInput.Icon
                 name="chevron-down"
                 onPress={showPreguntaMenu}
-                style={{ marginRight: -10 }} // Ajusta el margen del ícono
+                style={{ marginRight: -10 }}
               />
             }
           />
+          <Text style={styles.errorText}>{preguntaError}</Text>
           <Menu
             visible={preguntaMenuVisible}
             onDismiss={hidePreguntaMenu}
@@ -191,11 +320,11 @@ const Registro = ({ navigation }) => {
               </Button>
             }
           >
-            {preguntaOptions.map((option, index) => (
+            {preguntaOptions.map((preguntaOption) => (
               <Menu.Item
-                key={index}
-                onPress={() => selectPregunta(option)}
-                title={option}
+                key={preguntaOption}
+                onPress={() => selectPregunta(preguntaOption)}
+                title={preguntaOption}
               />
             ))}
           </Menu>
@@ -214,6 +343,7 @@ const Registro = ({ navigation }) => {
             />
           }
         />
+        <Text style={styles.errorText}>{respuestaError}</Text>
         <View style={styles.terminos}>
           <Checkbox
             status={checked ? "checked" : "unchecked"}
@@ -232,11 +362,17 @@ const Registro = ({ navigation }) => {
           <Button
             mode="contained"
             style={styles.sendbutton}
-            onPress={() => console.log("Pressed")}
+            onPress={() => {
+              if (formValid) {
+                console.log("Campos correctos");
+              } else {
+                console.log("Campos incorrectos");
+              }
+            }}
+            disabled={!formValid} // Aquí se deshabilita el botón si formValid es falso
           >
             Crear cuenta
           </Button>
-
           <View style={styles.separador}>
             <Text style={styles.linea}></Text>
             <Text variant="">O</Text>
@@ -274,9 +410,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     alignItems: "center",
   },
-
   terminos: {
-    alignItems: "center", // Cambia alignContent a alignItems
+    alignItems: "center",
     paddingLeft: 5,
     flexDirection: "row",
     flexWrap: "wrap",
@@ -307,22 +442,10 @@ const styles = StyleSheet.create({
   googlebutton: {
     marginTop: 20,
   },
-  texto: {
-    fontSize: 15,
-  },
-  restaurar: {
-    textDecorationLine: "underline",
-    color: "#0000FF",
-    marginTop: 10,
-  },
-  sendbutton: {
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  lineaCompleta: {
-    borderBottomWidth: 0.6, // Grosor de la línea
-    borderBottomColor: "black", // Color de la línea (puedes personalizarlo)
-    marginVertical: 10, // Espacio vertical entre la línea y otros elementos
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginTop: 5,
   },
 });
 
