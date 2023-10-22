@@ -25,7 +25,7 @@ const Guardados = ({ navigation }) => {
           onPress={() => navigation.navigate("Acceso")}
           style={styles.button2}
         >
-          Inicia Sesión
+          Iniciar sesión
         </Button>
       </Card.Content>
     </View>

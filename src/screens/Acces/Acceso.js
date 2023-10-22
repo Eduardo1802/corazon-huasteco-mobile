@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext";
-// 
 
 const Acceso = ({ navigation }) => {
   const [gmail, setGmail] = useState("");
@@ -17,11 +16,14 @@ const Acceso = ({ navigation }) => {
     try {
       const result = await login(gmail, pass);
       // Espera a que el usuario inicie sesión con Google y luego obtén el resultado.
-     console.log(result)
+      // console.log(result)
+      if (result) {
+        navigation.navigate("Perfil");
+      }
       // El usuario ha iniciado sesión con Google. Puedes acceder a la información del usuario en `result.user`.
     } catch (error) {
       // Maneja errores aquí.
-      console.error("Error al iniciar sesión con Google:", error);
+      console.log("Error al iniciar sesión con Google:", error);
     }
   }
   const handleGoogleLogin = async () => {

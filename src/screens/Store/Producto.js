@@ -1,14 +1,13 @@
-import React, { useRef, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
-import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
-import { Button, Text, Card, Divider, Avatar } from 'react-native-paper'
+import React, { useRef, useState } from "react";
+import { useRoute } from "@react-navigation/native";
+import { StyleSheet, View, ScrollView, Image, Dimensions } from "react-native";
+import { Button, Text, Card, Divider, Avatar } from "react-native-paper";
 
-
-const windowWidth = Dimensions.get('window').width;
+const windowWidth = Dimensions.get("window").width;
 
 const Producto = () => {
   const route = useRoute();
-  const { item } = route.params; 
+  const { item } = route.params;
   const scrollViewRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -18,11 +17,7 @@ const Producto = () => {
     setCurrentIndex(newIndex);
   };
 
-  const imageUrls = [
-    item.url,
-    item.url,
-    item.url,
-  ];
+  const imageUrls = [item.url, item.url, item.url];
 
   const renderImages = () => {
     return imageUrls.map((imageUrl, index) => (
@@ -52,7 +47,7 @@ const Producto = () => {
               key={index}
               style={[
                 styles.dot,
-                { color: index === currentIndex ? '#531949' : 'lightgray' },
+                { color: index === currentIndex ? "#531949" : "lightgray" },
               ]}
             >
               ⬤
@@ -65,12 +60,12 @@ const Producto = () => {
           <Card>
             <Card.Title
               title={item.nombre}
-              subtitle={'$'+item.costo}
+              subtitle={"$" + item.costo}
               titleStyle={styles.title}
-              subtitleStyle={{ textAlign: 'center' }}
+              subtitleStyle={{ textAlign: "center" }}
             />
             <Card.Content style={styles.cardContent}>
-              <Text variant="bodyMedium" style={{ textAlign: 'center' }}>
+              <Text variant="bodyMedium" style={{ textAlign: "center" }}>
                 {item.descripcion}
               </Text>
               <Text style={{ marginTop: 10 }}>Categoría(s):</Text>
@@ -78,18 +73,18 @@ const Producto = () => {
             </Card.Content>
             <Divider style={{ margin: 5 }} />
             <Card.Content style={styles.cardContent}>
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: "row" }}>
                 <Button
                   icon="currency-usd"
                   mode="contained"
-                  contentStyle={{ flexDirection: 'row-reverse' }}
+                  contentStyle={{ flexDirection: "row-reverse" }}
                   style={styles.button}
                 >
                   Comprar
                 </Button>
                 <Button
                   icon="cart"
-                  contentStyle={{ flexDirection: 'row-reverse' }}
+                  contentStyle={{ flexDirection: "row-reverse" }}
                   style={styles.button}
                 >
                   Añadir
@@ -99,13 +94,9 @@ const Producto = () => {
           </Card>
         </View>
 
-        
-{/* Testimonios */}
-<Card style={{ margin: 20 }}>
-          <Card.Title
-            title="Testimonios"
-            titleStyle={styles.title}
-          />
+        {/* Testimonios */}
+        <Card style={{ margin: 20 }}>
+          <Card.Title title="Testimonios" titleStyle={styles.title} />
           {/* Persona */}
           <Card style={{ marginBottom: 10, marginLeft: 10, marginRight: 10 }}>
             <Card.Content>
@@ -119,7 +110,11 @@ const Producto = () => {
                   // <Avatar.Text size={44} label="R" />
                 )}
               />
-              <Text style={{ textAlign: 'justify' }}>Remy Sharp — Despite seeing no many bad reviews on them coming in broken , I took the risk and happy I did. I got the 8 piece and they were all in perfect condition. Thanks!</Text>
+              <Text style={{ textAlign: "justify" }}>
+                Remy Sharp — Despite seeing no many bad reviews on them coming
+                in broken , I took the risk and happy I did. I got the 8 piece
+                and they were all in perfect condition. Thanks!
+              </Text>
             </Card.Content>
           </Card>
         </Card>
@@ -130,17 +125,17 @@ const Producto = () => {
 
 const styles = StyleSheet.create({
   cardContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   slide: {
     width: windowWidth - 20,
     height: 220,
-    marginLeft: 20
+    marginLeft: 20,
   },
   button: {
     borderWidth: 0.5,
-    borderColor: '#531949',
+    borderColor: "#531949",
     margin: 10,
   },
   image: {
@@ -148,12 +143,12 @@ const styles = StyleSheet.create({
     width: windowWidth - 40,
     height: 220,
     borderRadius: 10,
-    marginTop: 20
+    marginTop: 20,
   },
   dotsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     marginVertical: 5,
   },
   dot: {
@@ -166,8 +161,8 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   title: {
-    textAlign: 'center',
-    fontWeight: 'bold'
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });
 
