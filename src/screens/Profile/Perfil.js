@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import Sesion from "./Sesion";
 import Usuario from "./Usuario";
+
 const Perfil = ({ navigation }) => {
   const { user } = useAuth();
 

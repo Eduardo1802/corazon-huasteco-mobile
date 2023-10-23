@@ -9,6 +9,7 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext"
+
 const Usuario = ({ navigation, user }) => {
   const { logout } = useAuth(); 
   const handleLogout = async() => {

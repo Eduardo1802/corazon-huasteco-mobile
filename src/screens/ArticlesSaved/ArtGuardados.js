@@ -1,29 +1,28 @@
 import React from 'react'
 import { ScrollView, StyleSheet, View } from "react-native";
 import { Button, Text, Card, Divider, Avatar, Dialog, Portal, TextInput } from "react-native-paper";
+import { useRoute } from "@react-navigation/native";
 
 const ArtGuardados = () => {
+    const route = useRoute();
+    const { item } = route.params;
+
     return (
         <ScrollView>
             <View style={styles.container}>
                 {/* CONTENIDO */}
                 <Card style={styles.card}>
-                    <Text style={styles.big}>Carnaval</Text>
+                    <Text style={styles.big}>{item.titulo}</Text>
                     <Divider style={styles.divider} />
-                    <Card.Title title="Tradición" />
+                    <Card.Title title={item.tematica} />
                     <Card.Content>
                         <Card.Cover
                             source={{
-                                uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/Tradiciones%2Fcarnaval.jpg?alt=media&token=861b6e9f-2e59-43a8-a28b-46f62d43d2c9",
+                                uri: item.imgPortada,
                             }}
                         />
                         <Text variant="bodyMedium" style={styles.content}>
-                            Se efectúa a fines de febrero, alguna excepción a principios de
-                            marzo, cuatro días antes del miércoles de ceniza, martes antes del
-                            miércoles de ceniza se lleva acabo el desfile de disfrazados,
-                            carros alegóricos, participa el pueblo en general, escuelas,
-                            comunidades aledañas, presentando danzas, comparsas, música de
-                            viento y la tradición pintada.
+                            {item.informacion}
                         </Text>
                     </Card.Content>
                 </Card>

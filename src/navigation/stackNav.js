@@ -219,6 +219,19 @@ export function HomeStackScreen() {
           )
         })}
       />
+
+      <Stack.Screen name="GuardadosHome" component={Guardados}
+        options={({ navigation }) => ({
+          title: 'Guardados',
+        })}
+      />
+
+<Stack.Screen name="ArtGuardados" component={ArtGuardados}
+        options={({ navigation }) => ({
+          title: '',
+        })}
+        />
+        
     </Stack.Navigator>
   );
 }
@@ -255,7 +268,7 @@ export function SavedStackScreen() {
       />
 
       <Stack.Screen name="ArtGuardados" component={ArtGuardados}
-        options={({ navigation }) => ({
+        options={({ route }) => ({
           title: '',
         })}
       />

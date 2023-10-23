@@ -34,7 +34,7 @@ const Sesion = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   view: {
-    marginTop: 10,
+    margin: 20,
     borderStyle: "solid",
     borderWidth: 2,
     borderColor: "#E7E2E8",

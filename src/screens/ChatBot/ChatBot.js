@@ -15,7 +15,7 @@ const ChatBot = () => {
         <Divider />
 
         <Searchbar
-          placeholder= "Pregunta sobre los articulos"// "Envia tu pregunta sobre Huejutla"
+          placeholder= "Pregunta sobre los artículos"// "Envia tu pregunta sobre Huejutla"
           icon="send"
           onChangeText={onChangeSearch}
           value={searchQuery}
