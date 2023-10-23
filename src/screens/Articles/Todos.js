@@ -85,15 +85,27 @@ const Todos = ({ navigation }) => {
         .filter((doc) => doc.data().email === user.email && doc.data().titulo === item.titulo)
         .map((doc) => doc.data())
       if(datos.length === 0){
-        const coleccionRef = app.firestore().collection("guardados");
-        await coleccionRef.doc(`${new Date().getTime()}`).set({
-          email: user.email,
-          fecha: item.fecha,
-          imgPortada: item.imgPortada,
-          informacion: item.informacion,
-          tematica: item.tematica,
-          titulo: item.titulo,
-        });
+        if (item.fecha === undefined) {
+          const coleccionRef = app.firestore().collection("guardados");
+          await coleccionRef.doc(`${new Date().getTime()}`).set({
+            email: user.email,
+            fecha: "",
+            imgPortada: item.imgPortada,
+            informacion: item.informacion,
+            tematica: item.tematica,
+            titulo: item.titulo,
+          });
+        } else {
+          const coleccionRef = app.firestore().collection("guardados");
+          await coleccionRef.doc(`${new Date().getTime()}`).set({
+            email: user.email,
+            fecha: item.fecha,
+            imgPortada: item.imgPortada,
+            informacion: item.informacion,
+            tematica: item.tematica,
+            titulo: item.titulo,
+          });
+        }
         alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
       }else{
         alert(`La temática: ${item.titulo} ya ha sido guardada.`);

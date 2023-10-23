@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { Button, Text, Card, Searchbar } from "react-native-paper";
-import { app } from '../../config/firebase'
+import { app } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
 
 const Articulos = ({ navigation }) => {
@@ -19,11 +19,36 @@ const Articulos = ({ navigation }) => {
       .map((doc) => doc.data());
 
     setArticulos(datos);
-  }
+  };
+
+  const eliminarArticulos = async (item) => {
+    try {
+      const docList = await app.firestore().collection("guardados").get();
+      const documentos = docList.docs.filter(
+        (doc) =>
+          doc.data().email === user.email && doc.data().titulo === item.titulo
+      );
+
+      if (documentos.length > 0) {
+        const docRef = app
+          .firestore()
+          .collection("guardados")
+          .doc(documentos[0].id);
+        await docRef.delete();
+        alert(`El artículo "${item.titulo}" se eliminó exitosamente.`);
+      } else {
+        alert(`No se encontró el artículo "${item.titulo}" para eliminar.`);
+      }
+    } catch (error) {
+      console.error("Error al eliminar el artículo:", error);
+    }
+  };
 
   useEffect(() => {
-    const unsubscribe = app.firestore().collection("guardados")
-      .where("email", "==", user.email) 
+    const unsubscribe = app
+      .firestore()
+      .collection("guardados")
+      .where("email", "==", user.email)
       .onSnapshot((querySnapshot) => {
         const nuevosArticulos = querySnapshot.docs.map((doc) => doc.data());
         setArticulos(nuevosArticulos);
@@ -46,7 +71,7 @@ const Articulos = ({ navigation }) => {
           }}
         >
           <Text style={{ textAlign: "center" }}>
-          No tienes ningún artículo guardado.
+            No tienes ningún artículo guardado.
           </Text>
           <Card.Content>
             <Button
@@ -82,19 +107,21 @@ const Articulos = ({ navigation }) => {
                     {articulo.titulo}
                   </Text>
                   <Text variant="bodySmall" style={styles.text}>
-                    {articulo.fecha}
+                    {articulo.tematica}
                   </Text>
                   <Button
                     icon="text-box"
                     mode="contained"
                     style={styles.button}
-                    onPress={() => navigation.navigate("ArtGuardados", { item: articulo })}
+                    onPress={() =>
+                      navigation.navigate("ArtGuardados", { item: articulo })
+                    }
                   >
                     Leer artículo
                   </Button>
                   <Button
                     icon="delete-forever-outline"
-                    // onPress={() => navigation.navigate("Acceso")}
+                    onPress={() => eliminarArticulos(articulo)}
                     style={styles.button3}
                   >
                     Eliminar de Guardados
