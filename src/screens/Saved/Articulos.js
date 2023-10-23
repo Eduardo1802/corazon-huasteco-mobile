@@ -6,9 +6,6 @@ import { useAuth } from "../../context/AuthContext";
 
 const Articulos = ({ navigation }) => {
   const { user } = useAuth();
-
-  // const { item } = route.params;
-  
   // Buscador
   const [searchQuery, setSearchQuery] = useState("");
   const onChangeSearch = (query) => setSearchQuery(query);
@@ -25,8 +22,17 @@ const Articulos = ({ navigation }) => {
   }
 
   useEffect(() => {
-    obtenerInfo()
-  }, [])
+    const unsubscribe = app.firestore().collection("guardados")
+      .where("email", "==", user.email) 
+      .onSnapshot((querySnapshot) => {
+        const nuevosArticulos = querySnapshot.docs.map((doc) => doc.data());
+        setArticulos(nuevosArticulos);
+      });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [user.email]);
 
   return (
     <>

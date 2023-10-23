@@ -12,8 +12,10 @@ import {
   Searchbar,
 } from "react-native-paper";
 import { app } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
 
 const Todos = ({ navigation }) => {
+  const { user } = useAuth();
   // Ventana emergente menu tematicas
   const [visible, setVisible] = useState(false);
   const close = () => setVisible(false);
@@ -71,6 +73,33 @@ const Todos = ({ navigation }) => {
       }
     } catch (error) {
       console.error("Error al recuperar datos locales:", error);
+    }
+  };
+
+  const [selectedItem, setSelectedItem] = useState(null);
+  const guardarArticulos = async (item) => {
+    if (user) {
+      setSelectedItem(item);
+      const docList = await app.firestore().collection("guardados").get();
+      const datos = docList.docs
+        .filter((doc) => doc.data().email === user.email && doc.data().titulo === item.titulo)
+        .map((doc) => doc.data())
+      if(datos.length === 0){
+        const coleccionRef = app.firestore().collection("guardados");
+        await coleccionRef.doc(`${new Date().getTime()}`).set({
+          email: user.email,
+          fecha: item.fecha,
+          imgPortada: item.imgPortada,
+          informacion: item.informacion,
+          tematica: item.tematica,
+          titulo: item.titulo,
+        });
+        alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
+      }else{
+        alert(`La temática: ${item.titulo} ya ha sido guardada.`);
+      }
+    }else{
+      alert("Para poder guardar un artículo debes iniciar sesión");
     }
   };
 
@@ -224,6 +253,7 @@ const Todos = ({ navigation }) => {
               icon="arrow-down-circle-outline"
               mode="contained"
               style={styles.button}
+              onPress={() => guardarArticulos(producto)}
             >
               Guardar artículo
             </Button>
