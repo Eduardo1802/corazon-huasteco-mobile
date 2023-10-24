@@ -48,7 +48,6 @@ const Tematicas = () => {
     "puñetas",
     "puñetón",
   ];
-
   // Puntuación
   const textosPuntuacion = {
     1: "Inútil",
@@ -56,6 +55,17 @@ const Tematicas = () => {
     3: "De Acuerdo",
     4: "Bueno",
     5: "Excelente",
+  };
+
+  const [datos, setDatos] = useState([]);
+  const obtenerName = async () => {
+    if(user){
+      const coleccionRef = app.firestore().collection("usuarios");
+      coleccionRef.where("email", "==", user.email).onSnapshot((snapshot) => {
+        const data = snapshot.docs.map((doc) => doc.data());
+        setDatos(data);
+      });
+    }
   };
 
   const enviarComentario = async () => {
@@ -96,6 +106,7 @@ const Tematicas = () => {
       titulo: item.titulo,
       tematica: item.tematica,
       comentario: comentario,
+      name: datos.length > 0 ? datos[0].name : 'Nombre no disponible'
     });
     alert("Comentario enviado con exito.");
     setVisible(false);
@@ -113,6 +124,7 @@ const Tematicas = () => {
   };
 
   useEffect(() => {
+    obtenerName();
     obtenerInfo();
   }, []);
 
@@ -145,7 +157,7 @@ const Tematicas = () => {
               </Dialog.Title>
               <Dialog.Content>
                 <Divider style={styles.divider2} />
-                <Text>Usuario: {user.email}</Text>
+                <Text>Usuario: {datos.length > 0 ? datos[0].name : 'Nombre no disponible'}</Text>
                 <Divider style={styles.divider2} />
                 <Text>Foto de perfil</Text>
                 <Avatar.Image
@@ -205,7 +217,7 @@ const Tematicas = () => {
             <Card style={{ margin: 10 }} key={index}>
               <Card.Content>
                 <Card.Title
-                  title={datos.usuario}
+                  title={datos.name}
                   subtitle={
                     <AirbnbRating
                       size={20}
