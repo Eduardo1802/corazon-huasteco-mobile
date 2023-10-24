@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
   Text,
@@ -9,6 +9,7 @@ import {
   TouchableRipple,
 } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext"
+import { app } from "../../config/firebase";
 
 const Usuario = ({ navigation, user }) => {
   const { logout } = useAuth(); 
@@ -20,6 +21,21 @@ const Usuario = ({ navigation, user }) => {
       console.log(error.message);
     }
   }
+
+  const [datos, setDatos] = useState([]);
+
+  const obtenerName = async () => {
+    const coleccionRef = app.firestore().collection("usuarios");
+    coleccionRef.where("email", "==", user.email).onSnapshot((snapshot) => {
+      const data = snapshot.docs.map((doc) => doc.data());
+      setDatos(data);
+    });
+  };
+
+  useEffect(() => {
+    obtenerName();
+  }, []);
+
   return (
     <>
       {user && (
@@ -37,7 +53,7 @@ const Usuario = ({ navigation, user }) => {
                 Consultador
               </Button>
               <Text variant="titleLarge">Hola, Bienvenido</Text>
-              <Text variant="titleSmall">{user.email}</Text>
+              <Text variant="titleMedium">{datos.length > 0 ? datos[0].name : 'Nombre no disponible'}</Text>
               <Button icon="pencil" mode="contained" style={styles.button}>
                 Editar perfil
               </Button>

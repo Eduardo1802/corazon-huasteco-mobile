@@ -1,6 +1,6 @@
 import React from 'react'
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Button, Text, Card, Divider, Avatar, Dialog, Portal, TextInput } from "react-native-paper";
+import { Text, Card, Divider } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
 
 const ArtGuardados = () => {
