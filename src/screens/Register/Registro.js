@@ -1,21 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ScrollView,
-  Picker,
-} from "react-native";
-import {
-  Button,
-  Checkbox,
-  IconButton,
-  Text,
-  Title,
-  TextInput,
-  Menu,
-} from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
+import { Button, Checkbox, Text, TextInput, Menu } from "react-native-paper";
+import ModalSelector from 'react-native-modal-selector';
 
 const Registro = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
@@ -25,9 +11,9 @@ const Registro = ({ navigation }) => {
   const [cp, setCp] = useState("");
   const [cpError, setCpError] = useState("");
   const [estado, setEstado] = useState("");
-  const [estadoError, setEstadoError] = useState(""); // Nuevo estado de error
+  const [estadoError, setEstadoError] = useState("");
   const [pregunta, setPregunta] = useState("");
-  const [preguntaError, setPreguntaError] = useState(""); // Nuevo estado de error
+  const [preguntaError, setPreguntaError] = useState("");
   const [respuesta, setRespuesta] = useState("");
   const [gmail, setGmail] = useState("");
   const [gmailError, setGmailError] = useState("");
@@ -36,15 +22,13 @@ const Registro = ({ navigation }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [checked, setChecked] = useState(false);
-  const [selectedSex, setSelectedSex] = useState("");
-  const [sexMenuVisible, setSexMenuVisible] = useState(false);
+  const [sexo, setSexo] = useState("");
+  const [sexoError, setSexoError] = useState("");
   const [preguntaMenuVisible, setPreguntaMenuVisible] = useState(false);
   const [respuestaError, setRespuestaError] = useState("");
-  const showSexMenu = () => setSexMenuVisible(true);
-  const hideSexMenu = () => setSexMenuVisible(false);
+  
   const selectSex = (sex) => {
-    setSelectedSex(sex);
-    hideSexMenu();
+    setSexo(sex);
   };
 
   const showPreguntaMenu = () => setPreguntaMenuVisible(true);
@@ -86,82 +70,59 @@ const Registro = ({ navigation }) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!?/-_%$&^])[A-Za-z\d@#$!?/-_%$&^]+$/;
     return passwordRegex.test(password);
   };
+  // const codigoPostal = async () => {
+  //   if (cp.length === 5) {
+  //     const response = await fetch(`https://api.zippopotam.us/mx/${cp}`);
+  //     const data = await response.json();
+  //     setResult(data.places[0]);
+  //   } else {
+  //     setResult(null);
+  //     setEstado(""); // Restablece el valor del estado est a una cadena vacía
+  //     cpError("El codigo postal no existe");
+  //   }
+  // };
+  // useEffect(() => {
+  //   if (cp) {
+  //     codigoPostal();
+  //   }
+  //   if (result && result.state) {
+  //     setEst(result.state);
+  //     cpError("");
+  //   } else {
+  //     setEstado("");
+  //     cpError("El codigo postal no existe");
+  //   }
+  //   // eslint-disable-next-line
+  // }, [cp, result]);
 
   useEffect(() => {
-    // Validación del nombre
-    if (nombre.length < 2) {
-      setNombreError("El nombre debe tener al menos 2 caracteres");
-    } else {
-      setNombreError("");
-    }
+    if (nombre.length < 2) setNombreError("El nombre debe tener al menos 2 caracteres");
+    else setNombreError("");
 
-    // Validación del apellido
-    if (apellido.length < 2) {
-      setApellidoError("El apellido debe tener al menos 2 caracteres");
-    } else {
-      setApellidoError("");
-    }
+    if (apellido.length < 2) setApellidoError("El apellido debe tener al menos 2 caracteres");
+    else setApellidoError("");
 
-    // Validación del código postal
-    if (!/^\d{5}$/.test(cp)) {
-      setCpError("El código postal debe tener 5 dígitos numéricos");
-    } else {
-      setCpError("");
-    }
+    if (!/^\d{5}$/.test(cp)) setCpError("El código postal debe tener 5 dígitos numéricos");
+    else setCpError("");
 
-    // Validación del correo electrónico
-    if (!isEmailValid(gmail)) {
-      setGmailError("El correo no es válido");
-    } else {
-      setGmailError("");
-    }
+    if (!isEmailValid(gmail)) setGmailError("El correo no es válido");
+    else setGmailError("");
 
-    // Validación de la contraseña
-    if (!isPasswordValid(pass)) {
-      setPassError(
-        "La contraseña debe tener al menos 6 caracteres y cumplir los requisitos"
-      );
-    } else {
-      setPassError("");
-    }
+    if (!isPasswordValid(pass)) setPassError("La contraseña debe tener al menos 6 caracteres y cumplir ciertos requisitos");
+    else setPassError("");
 
-    // Validación del sexo
-    if (selectedSex === "") {
-      setSexMenuVisible(true);
-    } else {
-      setSexMenuVisible(false);
-    }
+    if (estado.trim() === "") setEstadoError("El estado no puede estar vacío");
+    else setEstadoError("");
 
-    // Validación del estado
-    if (estado.trim() === "") {
-      setEstadoError("El estado no puede estar vacío");
-    } else {
-      setEstadoError("");
-    }
+    if (pregunta.trim() === "") setPreguntaError("Debe seleccionar una pregunta secreta");
+    else setPreguntaError("");
 
-    // Validación de la pregunta secreta
-    if (pregunta.trim() === "") {
-      setPreguntaError("Debe seleccionar una pregunta secreta");
-    } else {
-      setPreguntaError("");
-    }
-    // Validación de la respuesta de la pregunta secreta
-    if (respuesta.trim() === "") {
-      setRespuestaError("La respuesta no puede estar vacía");
-    } else {
-      setRespuestaError("");
-    }
-  }, [
-    nombre,
-    apellido,
-    cp,
-    gmail,
-    pass,
-    selectedSex,
-    estado,
-    pregunta,
-    respuesta,
-  ]);
+    if (respuesta.trim() === "") setRespuestaError("La respuesta no puede estar vacía");
+    else setRespuestaError("");
+    if (sexo.trim() === "") setSexoError("Debe seleccionar un sexo");
+    else setSexoError("");
+    
+  }, [nombre, apellido, cp, gmail, pass, sexo, estado, pregunta, respuesta]);
 
   const formValid =
     nombreError === "" &&
@@ -172,6 +133,7 @@ const Registro = ({ navigation }) => {
     estadoError === "" &&
     preguntaError === "" &&
     respuestaError === "" &&
+    sexoError === "" &&
     checked;
 
   return (
@@ -216,39 +178,21 @@ const Registro = ({ navigation }) => {
 
         <View style={styles.enlinea}>
           <View style={styles.halfWidth}>
-            <TextInput
-              label="Sexo"
-              value={selectedSex}
-              mode="outlined"
-              editable={false}
-              right={
-                <TextInput.Icon
-                  name="chevron-down"
-                  onPress={showSexMenu}
-                  style={{ marginRight: -10 }}
+            <View style={styles.pickerContainer}>
+              <ModalSelector
+                data={sexoOptions.map((sex, index) => ({ key: index, label: sex }))}
+                initValue="Seleccione..."
+                onChange={(option) => selectSex(option.label)}
+              >
+                <TextInput
+                  label="Sexo"
+                  value={sexo}
+                  mode="outlined"
+                  editable={false}
                 />
-              }
-            />
-            <Text style={styles.errorText}>
-              {selectedSex === "" ? "Este campo es obligatorio" : ""}
-            </Text>
-            <Menu
-              visible={sexMenuVisible}
-              onDismiss={hideSexMenu}
-              anchor={
-                <Button onPress={showSexMenu}>
-                  <TextInput.Icon name="chevron-down" size={25} />
-                </Button>
-              }
-            >
-              {sexoOptions.map((sex) => (
-                <Menu.Item
-                  key={sex}
-                  onPress={() => selectSex(sex)}
-                  title={sex}
-                />
-              ))}
-            </Menu>
+              </ModalSelector>
+            </View>
+            <Text style={styles.errorText}>{sexoError}</Text>
           </View>
           <View style={styles.halfWidth}>
             <TextInput
@@ -316,7 +260,7 @@ const Registro = ({ navigation }) => {
             onDismiss={hidePreguntaMenu}
             anchor={
               <Button onPress={showPreguntaMenu}>
-                <TextInput.Icon name="chevron-down" size={25} />
+                Seleccionar pregunta
               </Button>
             }
           >
@@ -325,6 +269,7 @@ const Registro = ({ navigation }) => {
                 key={preguntaOption}
                 onPress={() => selectPregunta(preguntaOption)}
                 title={preguntaOption}
+                
               />
             ))}
           </Menu>
@@ -401,6 +346,16 @@ const styles = StyleSheet.create({
   },
   enlinea: {
     flexDirection: "row",
+  },
+   pickerContainer: {
+    borderColor: "rgba(0, 0, 0, 0.2)",
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 8,
+  },
+  pickerLabel: {
+    paddingLeft: 8,
+    color: "rgba(0, 0, 0, 0.54)",
   },
   halfWidth: {
     flex: 1,
