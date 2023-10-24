@@ -2,39 +2,37 @@ import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Acceso = ({ navigation }) => {
   const [gmail, setGmail] = useState("");
   const [pass, setPass] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const { loginWithGoogle } = useAuth();
-  const { login } = useAuth();
+  const { loginWithGoogle, login } = useAuth();
+
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
-  const handleSubmit = async ()=>{
+  const handleSubmit = async () => {
     try {
       const result = await login(gmail, pass);
-      // Espera a que el usuario inicie sesión con Google y luego obtén el resultado.
-      // console.log(result)
       if (result) {
+        // Guarda las credenciales en AsyncStorage después del inicio de sesión exitoso
+        await AsyncStorage.setItem("userEmail", gmail);
+        await AsyncStorage.setItem("userPassword", pass);
         navigation.navigate("Perfil");
       }
-      // El usuario ha iniciado sesión con Google. Puedes acceder a la información del usuario en `result.user`.
     } catch (error) {
-      // Maneja errores aquí.
-      console.log("Error al iniciar sesión con Google:", error);
+      console.log("Error al iniciar sesión", error);
     }
-  }
+  };
   const handleGoogleLogin = async () => {
     try {
       const result = await loginWithGoogle();
-      // Espera a que el usuario inicie sesión con Google y luego obtén el resultado.
-     console.log(result)
-      // El usuario ha iniciado sesión con Google. Puedes acceder a la información del usuario en `result.user`.
+      if (result) {
+        navigation.navigate("Perfil");
+      }
     } catch (error) {
-      // Maneja errores aquí.
-      console.error("Error al iniciar sesión con Google:", error);
+      console.log("Error al iniciar sesión con Google:", error);
     }
   };
   return (
