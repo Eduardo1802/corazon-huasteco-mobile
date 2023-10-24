@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { Button, Checkbox, Text, TextInput, Menu } from "react-native-paper";
-import ModalSelector from 'react-native-modal-selector';
-
+import ModalSelector from "react-native-modal-selector";
+// context component
+import { useAuth } from "../../context/AuthContext";
+// firebase component
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { db } from "../../config/firebaseDB";
 const Registro = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [nombreError, setNombreError] = useState("");
@@ -26,7 +30,53 @@ const Registro = ({ navigation }) => {
   const [sexoError, setSexoError] = useState("");
   const [preguntaMenuVisible, setPreguntaMenuVisible] = useState(false);
   const [respuestaError, setRespuestaError] = useState("");
+  const { signup } = useAuth();
+  const handleSubmit = async () => {
+    try {
+      const info = await signup(gmail, pass);
+      const referencia = doc(db, `usuarios/${info.user.uid}`);
+      const referencia2 = doc(db, `usuarios_correo/${info.user.email}`);
   
+      await getDoc(referencia);
+      await getDoc(referencia2);
+  
+      setDoc(referencia, {
+        name:nombre,
+        lastName: apellido,
+        gender: sexo,
+        zipCode:cp,
+        email: gmail,
+        password: pass,
+        secretQuestion: pregunta,
+        secretQuestionAnswer:respuesta,
+        rol: "consultador",
+        state: estado,
+        bloqueo: 3,
+      });
+  
+      setDoc(referencia2, {
+        name:nombre,
+        lastName: apellido,
+        gender: sexo,
+        zipCode:cp,
+        email: gmail,
+        password: pass,
+        secretQuestion: pregunta,
+        secretQuestionAnswer:respuesta,
+        rol: "consultador",
+        state: estado,
+        bloqueo: 3,
+      });
+      if (info) {
+        console.log("Registro exitoso");
+        navigation.navigate("Perfil");
+      }
+    } catch (error) {
+      console.log("Error al crear la cuenta", error);
+    }
+  };
+  
+
   const selectSex = (sex) => {
     setSexo(sex);
   };
@@ -46,7 +96,7 @@ const Registro = ({ navigation }) => {
     "¿Nombre de tu padre o madre?",
   ];
 
-  const sexoOptions = ["Hombre", "Mujer"];
+  const sexoOptions = ["Masculino", "Femenino"];
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -96,32 +146,39 @@ const Registro = ({ navigation }) => {
   // }, [cp, result]);
 
   useEffect(() => {
-    if (nombre.length < 2) setNombreError("El nombre debe tener al menos 2 caracteres");
+    if (nombre.length < 2)
+      setNombreError("El nombre debe tener al menos 2 caracteres");
     else setNombreError("");
 
-    if (apellido.length < 2) setApellidoError("El apellido debe tener al menos 2 caracteres");
+    if (apellido.length < 2)
+      setApellidoError("El apellido debe tener al menos 2 caracteres");
     else setApellidoError("");
 
-    if (!/^\d{5}$/.test(cp)) setCpError("El código postal debe tener 5 dígitos numéricos");
+    if (!/^\d{5}$/.test(cp))
+      setCpError("El código postal debe tener 5 dígitos numéricos");
     else setCpError("");
 
     if (!isEmailValid(gmail)) setGmailError("El correo no es válido");
     else setGmailError("");
 
-    if (!isPasswordValid(pass)) setPassError("La contraseña debe tener al menos 6 caracteres y cumplir ciertos requisitos");
+    if (!isPasswordValid(pass))
+      setPassError(
+        "La contraseña debe tener al menos 6 caracteres y cumplir ciertos requisitos"
+      );
     else setPassError("");
 
     if (estado.trim() === "") setEstadoError("El estado no puede estar vacío");
     else setEstadoError("");
 
-    if (pregunta.trim() === "") setPreguntaError("Debe seleccionar una pregunta secreta");
+    if (pregunta.trim() === "")
+      setPreguntaError("Debe seleccionar una pregunta secreta");
     else setPreguntaError("");
 
-    if (respuesta.trim() === "") setRespuestaError("La respuesta no puede estar vacía");
+    if (respuesta.trim() === "")
+      setRespuestaError("La respuesta no puede estar vacía");
     else setRespuestaError("");
     if (sexo.trim() === "") setSexoError("Debe seleccionar un sexo");
     else setSexoError("");
-    
   }, [nombre, apellido, cp, gmail, pass, sexo, estado, pregunta, respuesta]);
 
   const formValid =
@@ -180,7 +237,10 @@ const Registro = ({ navigation }) => {
           <View style={styles.halfWidth}>
             <View style={styles.pickerContainer}>
               <ModalSelector
-                data={sexoOptions.map((sex, index) => ({ key: index, label: sex }))}
+                data={sexoOptions.map((sex, index) => ({
+                  key: index,
+                  label: sex,
+                }))}
                 initValue="Seleccione..."
                 onChange={(option) => selectSex(option.label)}
               >
@@ -259,9 +319,7 @@ const Registro = ({ navigation }) => {
             visible={preguntaMenuVisible}
             onDismiss={hidePreguntaMenu}
             anchor={
-              <Button onPress={showPreguntaMenu}>
-                Seleccionar pregunta
-              </Button>
+              <Button onPress={showPreguntaMenu}>Seleccionar pregunta</Button>
             }
           >
             {preguntaOptions.map((preguntaOption) => (
@@ -269,7 +327,6 @@ const Registro = ({ navigation }) => {
                 key={preguntaOption}
                 onPress={() => selectPregunta(preguntaOption)}
                 title={preguntaOption}
-                
               />
             ))}
           </Menu>
@@ -308,11 +365,7 @@ const Registro = ({ navigation }) => {
             mode="contained"
             style={styles.sendbutton}
             onPress={() => {
-              if (formValid) {
-                console.log("Campos correctos");
-              } else {
-                console.log("Campos incorrectos");
-              }
+              handleSubmit();
             }}
             disabled={!formValid} // Aquí se deshabilita el botón si formValid es falso
           >
@@ -347,7 +400,7 @@ const styles = StyleSheet.create({
   enlinea: {
     flexDirection: "row",
   },
-   pickerContainer: {
+  pickerContainer: {
     borderColor: "rgba(0, 0, 0, 0.2)",
     borderWidth: 1,
     borderRadius: 4,
