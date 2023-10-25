@@ -30,7 +30,9 @@ const Registro = ({ navigation }) => {
   const [sexoError, setSexoError] = useState("");
   const [preguntaMenuVisible, setPreguntaMenuVisible] = useState(false);
   const [respuestaError, setRespuestaError] = useState("");
+  const [result, setResult] = useState("");
   const { signup } = useAuth();
+  const [cpMessage, setCpMessage] = useState(""); 
   const handleSubmit = async () => {
     try {
       const info = await signup(gmail, pass);
@@ -120,32 +122,43 @@ const Registro = ({ navigation }) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!?/-_%$&^])[A-Za-z\d@#$!?/-_%$&^]+$/;
     return passwordRegex.test(password);
   };
-  // const codigoPostal = async () => {
-  //   if (cp.length === 5) {
-  //     const response = await fetch(`https://api.zippopotam.us/mx/${cp}`);
-  //     const data = await response.json();
-  //     setResult(data.places[0]);
-  //   } else {
-  //     setResult(null);
-  //     setEstado(""); // Restablece el valor del estado est a una cadena vacía
-  //     cpError("El codigo postal no existe");
-  //   }
-  // };
-  // useEffect(() => {
-  //   if (cp) {
-  //     codigoPostal();
-  //   }
-  //   if (result && result.state) {
-  //     setEst(result.state);
-  //     cpError("");
-  //   } else {
-  //     setEstado("");
-  //     cpError("El codigo postal no existe");
-  //   }
-  //   // eslint-disable-next-line
-  // }, [cp, result]);
+  const codigoPostal = async () => {
+    if (cp.length === 5) {
+      const response = await fetch(`https://api.zippopotam.us/mx/${cp}`);
+      const data = await response.json();
+      if (data.places && data.places.length > 0) {
+        const state = data.places[0].state;
+        setCpMessage(`Código Postal válido: ${cp}`);
+        setEstado(state);
+        setCpError("");
+      } else {
+        setCpMessage("El código postal no existe");
+        setEstado("");
+        setCpError("El código postal no existe");
+      }
+    } else {
+      setCpMessage("");
+      setEstado(""); // Restablece el valor del estado est a una cadena vacía
+      setCpError("El código postal debe tener 5 dígitos numéricos");
+    }
+  };
 
   useEffect(() => {
+    if (cp) {
+      codigoPostal();
+    }
+    // eslint-disable-next-line
+  }, [cp]);
+
+  useEffect(() => {
+    // Validación del código postal
+    if (/^\d{5}$/.test(cp)) {
+      setCpMessage(`Código Postal válido: ${cp}`);
+      setCpError(""); // CP es válido, borra el mensaje de error
+    } else {
+      setCpMessage("Código Postal incorrecto");
+      setCpError("El código postal debe tener 5 dígitos numéricos");
+    }
     if (nombre.length < 2)
       setNombreError("El nombre debe tener al menos 2 caracteres");
     else setNombreError("");
@@ -197,6 +210,7 @@ const Registro = ({ navigation }) => {
     <ScrollView>
       <View style={styles.container}>
         <Text variant="displayMedium">Regístrate</Text>
+
         <View style={styles.registrationContainer}>
           <Text variant="titleMedium">¿Ya tienes cuenta? </Text>
           <TouchableOpacity onPress={() => navigation.navigate("Acceso")}>
@@ -255,17 +269,21 @@ const Registro = ({ navigation }) => {
             <Text style={styles.errorText}>{sexoError}</Text>
           </View>
           <View style={styles.halfWidth}>
-            <TextInput
-              label="Código postal"
-              value={cp}
-              mode="outlined"
-              onChangeText={(text) => {
-                setCp(text);
-              }}
-              style={styles.textInput}
-            />
-            <Text style={styles.errorText}>{cpError}</Text>
-          </View>
+          <TextInput
+            label="Código postal"
+            value={cp}
+            mode="outlined"
+            onChangeText={(text) => {
+              setCp(text);
+              // Al modificar el CP, borra el mensaje
+              setCpError("");
+              setCpMessage("");
+              setEstado("");
+            }}
+          />
+          <Text style={styles.errorText}>{cpError}</Text>
+
+        </View>
         </View>
         <TextInput
           label="Estado"
