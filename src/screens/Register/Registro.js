@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 import { Button, Checkbox, Text, TextInput, Menu } from "react-native-paper";
 import ModalSelector from "react-native-modal-selector";
-// context component
 import { useAuth } from "../../context/AuthContext";
-// firebase component
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../config/firebaseDB";
+import axios from "axios";
+
 const Registro = ({ navigation }) => {
   const [nombre, setNombre] = useState("");
   const [nombreError, setNombreError] = useState("");
@@ -32,7 +32,7 @@ const Registro = ({ navigation }) => {
   const [respuestaError, setRespuestaError] = useState("");
   const [result, setResult] = useState("");
   const { signup } = useAuth();
-  const [cpMessage, setCpMessage] = useState(""); 
+  const [cpMessage, setCpMessage] = useState("");
   const handleSubmit = async () => {
     try {
       const info = await signup(gmail, pass);
@@ -122,6 +122,36 @@ const Registro = ({ navigation }) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$!?/-_%$&^])[A-Za-z\d@#$!?/-_%$&^]+$/;
     return passwordRegex.test(password);
   };
+  const validarEmail = async (email) => {
+    try {
+      const response = await axios.get(
+        `https://api.hunter.io/v2/email-verifier?email=${email}&domain_search=uthh.edu.mx&api_key=b7c17eb8a0f0ee28d6606f2677710cd1bf7f1bc0`
+      );
+      const isValid = response.data.data.result === "deliverable";
+  
+      if (isValid) {
+        setGmailError("");
+        return true; // El correo es válido
+      } else {
+        setGmailError("Tu correo no es válido, ingresa uno existente para continuar");
+        return false; // El correo no es válido
+      }
+    } catch (error) {
+      console.error("Error al validar el correo:", error);
+      // Puedes personalizar el manejo de errores aquí
+      // Por ejemplo, mostrar un mensaje amigable al usuario o registrar el error
+      // setGmailError("Ha ocurrido un error al validar el correo.");
+      return false; // Considera si quieres marcar el correo como inválido en este caso
+    }
+  };
+  useEffect(() => {
+    if (gmail) {
+      validarEmail(gmail).then((correoValido) => {
+        // Realiza acciones adicionales según si el correo es válido o no
+        
+      });
+    }
+  }, [gmail]);
   const codigoPostal = async () => {
     if (cp.length === 5) {
       const response = await fetch(`https://api.zippopotam.us/mx/${cp}`);
@@ -149,7 +179,7 @@ const Registro = ({ navigation }) => {
     }
     // eslint-disable-next-line
   }, [cp]);
-
+  
   useEffect(() => {
     // Validación del código postal
     if (/^\d{5}$/.test(cp)) {
@@ -289,6 +319,7 @@ const Registro = ({ navigation }) => {
           label="Estado"
           value={estado}
           mode="outlined"
+          editable={false}
           onChangeText={(text) => setEstado(text)}
           style={styles.textInput}
         />
@@ -319,35 +350,24 @@ const Registro = ({ navigation }) => {
         />
         <Text style={styles.errorText}>{passError}</Text>
         <View style={styles.halfWidth}>
-          <TextInput
-            label="Pregunta secreta"
-            value={pregunta}
-            mode="outlined"
-            editable={false}
-            right={
-              <TextInput.Icon
-                name="chevron-down"
-                onPress={showPreguntaMenu}
-                style={{ marginRight: -10 }}
+          <View style={styles.pickerContainer}>
+            <ModalSelector
+              data={preguntaOptions.map((preguntaOption, index) => ({
+                key: index,
+                label: preguntaOption,
+              }))}
+              initValue="Seleccione..."
+              onChange={(option) => setPregunta(option.label)}
+            >
+              <TextInput
+                label="Pregunta secreta"
+                value={pregunta}
+                mode="outlined"
+                editable={false}
               />
-            }
-          />
+            </ModalSelector>
+          </View>
           <Text style={styles.errorText}>{preguntaError}</Text>
-          <Menu
-            visible={preguntaMenuVisible}
-            onDismiss={hidePreguntaMenu}
-            anchor={
-              <Button onPress={showPreguntaMenu}>Seleccionar pregunta</Button>
-            }
-          >
-            {preguntaOptions.map((preguntaOption) => (
-              <Menu.Item
-                key={preguntaOption}
-                onPress={() => selectPregunta(preguntaOption)}
-                title={preguntaOption}
-              />
-            ))}
-          </Menu>
         </View>
         <TextInput
           label="Respuesta a la pregunta secreta"
