@@ -6,42 +6,9 @@ import { Avatar, Button, Card, Divider, Text } from "react-native-paper";
 import baseImage from '../../../assets/img/app/image-preview.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from '../../config/firebase'
-import { useAuth } from "../../context/AuthContext";
-
 
 const Inicio = ({ navigation }) => {
-  const { login } = useAuth();
-  const [storedCredentials, setStoredCredentials] = useState(null);
-
-  const obtenerCredencialesAlmacenadas = async () => {
-    try {
-      const userEmail = await AsyncStorage.getItem("userEmail");
-      const userPassword = await AsyncStorage.getItem("userPassword");
-      if (userEmail && userPassword) {
-        setStoredCredentials({ email: userEmail, password: userPassword });
-      }
-      console.log("Credenciales recuperadas",userEmail,userPassword)
-    } catch (error) {
-      console.error("Error al recuperar credenciales:", error);
-    }
-  }
-
-  const handleAutoLogin = async () => {
-    if (storedCredentials) {
-      try {
-        const { email, password } = storedCredentials;
-        await login(email, password);
-      } catch (error) {
-        console.error("Error al iniciar sesión automáticamente:", error);
-      }
-    }
-  }
-
-  useEffect(() => {
-    obtenerCredencialesAlmacenadas();
-    handleAutoLogin(); // Intenta el inicio de sesión automático al cargar la pantalla.
-  }, []);
-
+  
   const obtenerDatosDeFirebase = async () => {
     try {
       const productoSnapshot = await app.firestore().collection("producto").get();

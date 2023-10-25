@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 const Acceso = ({ navigation }) => {
   const [gmail, setGmail] = useState("");
   const [pass, setPass] = useState("");
@@ -16,9 +15,6 @@ const Acceso = ({ navigation }) => {
     try {
       const result = await login(gmail, pass);
       if (result) {
-        // Guarda las credenciales en AsyncStorage después del inicio de sesión exitoso
-        await AsyncStorage.setItem("userEmail", gmail);
-        await AsyncStorage.setItem("userPassword", pass);
         navigation.navigate("Perfil");
       }
     } catch (error) {
