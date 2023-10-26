@@ -1,11 +1,18 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet,Image } from "react-native";
 import { Avatar, Button, Card, Divider, Text } from "react-native-paper";
 import baseImage from '../../../assets/img/app/image-preview.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from '../../config/firebase'
+import imgFauna from '../../../assets/img/inicio/fauna-02.jpg';
+import imgFlora from '../../../assets/img/inicio/flora-02.jpg';
+import imgCat from '../../../assets/img/inicio/catedral-01.jpg';
+import imgCentro from '../../../assets/img/inicio/Foto-centro-02.jpg';
+import imgLateral from '../../../assets/img/inicio/imagenLateral.jpg';
+import imgMural from '../../../assets/img/inicio/imgMural-01.jpg';
+import imgSierra from '../../../assets/img/inicio/imgSierra.jpg';
 
 const Inicio = ({ navigation }) => {
   
@@ -79,6 +86,13 @@ const Inicio = ({ navigation }) => {
         <Text style={{textAlign: 'center', fontSize: 20}}>
           Conoce a los Apasionados Guardianes de la Cultura y la Región
         </Text>
+        <View style={styles.imageContainer}>
+          <Image
+            source={imgLateral}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={styles.Text}>
           Nuestra plataforma es un faro de conocimiento y autenticidad gracias a nuestros dedicados colaboradores. Ellos son los narradores de historias, los guardianes de tradiciones y los informantes de la Huasteca Hidalguense. Con una profunda pasión por su cultura y región, nuestros colaboradores aportan información verídica y perspectivas únicas a través de sus artículos. Desde relatos históricos hasta exploraciones de festivales locales, sus contribuciones enriquecen nuestra comunidad y te sumergen en la riqueza de la Huasteca.
         </Text>
@@ -86,6 +100,13 @@ const Inicio = ({ navigation }) => {
           EXPLORA SUS VOCES
         </Button>
         <Divider style={styles.dividerStyle}/>
+        <View style={styles.imageContainer}>
+          <Image
+            source={imgFlora}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={styles.titleText}>
           Riqueza Botánica de la Huasteca Hidalguense
         </Text>
@@ -96,6 +117,13 @@ const Inicio = ({ navigation }) => {
           VER MÁS
         </Button>
         <Divider style={styles.dividerStyle}/>
+        <View style={styles.imageContainer}>
+          <Image
+            source={imgFauna}
+            style={styles.image}
+            resizeMode="contain"
+          />
+        </View>
         <Text style={styles.titleText}>
           Diversidad Faunística de Huejutla
         </Text>
@@ -116,7 +144,6 @@ const Inicio = ({ navigation }) => {
     </ScrollView>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     display: "flex",
@@ -140,7 +167,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   normalText: {
-    fontSize: 20, // Tamaño de fuente más pequeño
+    fontSize: 16, // Tamaño de fuente más pequeño
     fontWeight: 'normal', // Estilo de fuente normal
     lineHeight: 25,
     margin: 10,
@@ -148,7 +175,7 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   Text: {
-    fontSize: 20, // Tamaño de fuente más pequeño
+    fontSize: 16, // Tamaño de fuente más pequeño
     fontWeight: 'normal', // Estilo de fuente normal
     lineHeight: 25,
     margin: 10,
@@ -165,7 +192,19 @@ const styles = StyleSheet.create({
   },
   dividerStyle: {
     backgroundColor: '#b5b5b5',
-    pading: 50
+    margin: 50
+  },
+  imageContainer: {
+    marginTop:5,
+    width: '100%',
+    aspectRatio: 1, 
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
 });
 
