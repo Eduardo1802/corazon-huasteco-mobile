@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
-import { View, StyleSheet,Image } from "react-native";
-import { Avatar, Button, Card, Divider, Text } from "react-native-paper";
+
+import { ScrollView,View, StyleSheet,Image,FlatList,Dimensions } from "react-native";
+import {  Button, Divider, Text } from "react-native-paper";
 import baseImage from '../../../assets/img/app/image-preview.png'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { app } from '../../config/firebase'
@@ -13,6 +13,14 @@ import imgCentro from '../../../assets/img/inicio/Foto-centro-02.jpg';
 import imgLateral from '../../../assets/img/inicio/imagenLateral.jpg';
 import imgMural from '../../../assets/img/inicio/imgMural-01.jpg';
 import imgSierra from '../../../assets/img/inicio/imgSierra.jpg';
+
+{/*Carrusel Config*/}
+const width = Dimensions.get("window").width;
+const height = Dimensions.get("window").height;
+const AnchoCont = width;
+const ESPACIO_CONTENEDOR = (width - AnchoCont) / 2;
+const ALTURA_BACKDROP = height * 0.4;
+const imagesCarr = [imgCat, imgCentro, imgMural];
 
 const Inicio = ({ navigation }) => {
   
@@ -73,6 +81,30 @@ const Inicio = ({ navigation }) => {
 
   return (
     <ScrollView>
+      {/*Carrusel*/}
+      <FlatList
+          data={imagesCarr}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          snapToAlignment="start"
+          contentContainerStyle={{
+          paddingHorizontal: ESPACIO_CONTENEDOR,
+        }}
+        snapToInterval={AnchoCont}
+        decelerationRate={0}
+        scrollEventThrottle={16}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
+            <View style={{ width: AnchoCont }}>
+              <View style={{
+                alignItems: 'center'
+              }}>
+                <Image source={item} style={styles.posterImage} />
+              </View>
+            </View>
+          )}
+        />
+        {/*Vista Principal*/}
       <View style={styles.container}>
         <Text variant="headlineSmall" style={styles.title}>
           Huejutla: Descubriendo Nuestra Historia.
@@ -206,6 +238,13 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'contain',
   },
+  posterImage: {
+    width: '100%',
+    height: ALTURA_BACKDROP,
+    resizeMode: 'cover',
+    margin:0
+    
+  }
 });
 
 export default Inicio;
