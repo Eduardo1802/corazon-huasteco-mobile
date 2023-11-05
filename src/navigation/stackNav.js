@@ -21,6 +21,7 @@ import Carrito from '../screens/Store/Carrito';
 import Perfil from '../screens/Profile/Perfil';
 import { createStackNavigator } from "@react-navigation/stack";
 import { Logo } from "../components/customs/Logo";
+import Todos from "../screens/Articles/Todos";
 
 
 const Stack = createStackNavigator();
@@ -223,6 +224,11 @@ export function HomeStackScreen() {
       <Stack.Screen name="GuardadosHome" component={Guardados}
         options={({ navigation }) => ({
           title: 'Guardados',
+        })}
+      />
+      <Stack.Screen name="TodosArticulos" component={Todos}
+        options={({ navigation }) => ({
+          title: 'Todos',
         })}
       />
 

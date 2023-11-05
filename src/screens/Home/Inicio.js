@@ -131,9 +131,6 @@ const Inicio = ({ navigation }) => {
         <Text style={styles.Text}>
           Nuestra plataforma es un faro de conocimiento y autenticidad gracias a nuestros dedicados colaboradores. Ellos son los narradores de historias, los guardianes de tradiciones y los informantes de la Huasteca Hidalguense. Con una profunda pasión por su cultura y región, nuestros colaboradores aportan información verídica y perspectivas únicas a través de sus artículos. Desde relatos históricos hasta exploraciones de festivales locales, sus contribuciones enriquecen nuestra comunidad y te sumergen en la riqueza de la Huasteca.
         </Text>
-        <Button style={styles.button} mode="contained">
-          EXPLORA SUS VOCES
-        </Button>
         <Divider style={styles.dividerStyle}/>
         <View style={styles.imageContainer}>
           <Image
@@ -148,7 +145,7 @@ const Inicio = ({ navigation }) => {
         <Text style={styles.normalText}>
           Explora la abundante biodiversidad de Huejutla: árboles frutales, madera fina, plantas medicinales y una profusión de flora.
         </Text>
-        <Button style={styles.button} mode="contained">
+        <Button style={styles.button} mode="contained"onPress={() => navigation.navigate('TodosArticulos')}>
           VER MÁS
         </Button>
         <Divider style={styles.dividerStyle}/>
@@ -165,7 +162,7 @@ const Inicio = ({ navigation }) => {
         <Text style={styles.normalText}>
           Descubre la fascinante variedad de vida silvestre en Huejutla, desde mamíferos y aves hasta reptiles y más.
         </Text>
-        <Button style={styles.button} mode="contained">
+        <Button style={styles.button} mode="contained" onPress={() => navigation.navigate('TodosArticulos')}>
           VER MÁS
         </Button>
         <Divider style={styles.dividerStyle}/>
