@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View, Image } from 'react-native';
 import { Text, Divider, Button } from 'react-native-paper';
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
-const Notify = () => {
-  const handleActivarClick = () => {
+class Notify extends Component {
+  handleActivarClick = () => {
     const objeto = {
       nombre: 'John Doe',
       edad: 30,
@@ -12,47 +14,49 @@ const Notify = () => {
     console.log(objeto);
   };
 
-  return (
-    <ScrollView>
-      <View style={styles.container}>
-        <Text variant="displaySmall" style={{ marginBottom: 0, fontWeight: 700 }}>
-          Notificaciones
-        </Text>
-        <Divider />
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../../../assets/img/notify/bell.png')}
-            style={styles.image}
-          />
+  render() {
+    return (
+      <ScrollView>
+        <View style={styles.container}>
+          <Text variant="displaySmall" style={{ marginBottom: 0, fontWeight: 700 }}>
+            Notificaciones
+          </Text>
+          <Divider />
+          <View style={styles.imageContainer}>
+            <Image
+              source={require('../../../assets/img/notify/bell.png')}
+              style={styles.image}
+            />
+          </View>
+          <Divider />
+          <Text variant="displaySmall" style={{ marginBottom: 0, fontWeight: 700 }}>
+            Mantente al día
+          </Text>
+          <Text variant="displaySmall" style={{ marginBottom: 0, fontSize: 20, lineHeight: 24 }}>
+            Activa las notificaciones para recibir actualizaciones sobre Corazon Huasteco
+          </Text>
+          <Divider />
+          <View style={styles.buttonContainer}>
+            <Button
+              mode="outlined"
+              onPress={() => console.log('Más tarde')}
+              style={styles.button}
+            >
+              Más tarde
+            </Button>
+            <Button
+              mode="contained"
+              onPress={this.handleActivarClick}
+              style={styles.button}
+            >
+              Activar
+            </Button>
+          </View>
         </View>
-        <Divider />
-        <Text variant="displaySmall" style={{ marginBottom: 0, fontWeight: 700 }}>
-          Mantente al día
-        </Text>
-        <Text variant="displaySmall" style={{ marginBottom: 0, fontSize: 20, lineHeight: 24 }}>
-          Activa las notificaciones para recibir actualizaciones sobre Corazon Huasteco
-        </Text>
-        <Divider />
-        <View style={styles.buttonContainer}>
-          <Button
-            mode="outlined"
-            onPress={() => console.log('Más tarde')}
-            style={styles.button}
-          >
-            Más tarde
-          </Button>
-          <Button
-            mode="contained"
-            onPress={handleActivarClick}
-            style={styles.button}
-          >
-            Activar
-          </Button>
-        </View>
-      </View>
-    </ScrollView>
-  );
-};
+      </ScrollView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {

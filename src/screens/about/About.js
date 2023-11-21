@@ -9,7 +9,7 @@ const MiPantalla = () => {
     { id: 2, image: 'https://corazon-huasteco.com/assets/josa-4d1c1783.jpg', name: 'YAEL JOSAFATH FLORES ALVARADO' },
     { id: 3, image: 'https://corazon-huasteco.com/assets/elder-7c4e93b0.jpg', name: 'ELDER YAHIR MEYER SÁNCHEZ ' },
     { id: 4, image: 'https://corazon-huasteco.com/assets/einar-0c00beb4.jpg', name: 'EINAR OMAR VILLEGAZ RUIZ ' },
-    { id: 5, image: 'https://corazon-huasteco.com/assets/chino-daf0060a.jpg', name: 'JUAN DE DIOS DEL ANGEL ARRIAGA  ' },
+    { id: 5, image: 'https://scontent.fver2-1.fna.fbcdn.net/v/t39.30808-6/402941631_3498820663674073_5245205798744370229_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGYXwDicEHwbp6RfVYX5WGR-duk1IH4lZX526TUgfiVlUGNU46TflNThpFG0WfOyUgslimR2ZYZBlrWXenZNmFW&_nc_ohc=6LnvU39nAQ0AX81buI3&_nc_oc=AQmu5Xhz_ujzl99CJl5mZ4RtvYp83ZFoytgCKaD3UQgAZ0d4eh7dhKWvVgKKUozKcqVpaatPJ68iJY_n4rQTGJsn&_nc_ht=scontent.fver2-1.fna&oh=00_AfBNL06mw_IfMaRySGI9B-QLOXoVAKfcFiqJbbesJxlMOw&oe=65609EA2', name: 'JUAN DE DIOS DEL ANGEL ARRIAGA  ' },
   ];
 
   const handleAvatarPressIn = (avatarId) => {
