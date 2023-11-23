@@ -30,7 +30,10 @@ const Inicio = ({ navigation }) => {
   const obtenerDatosDeFirebase = async () => {
     try {
       const productoSnapshot = await app.firestore().collection("producto").get();
-      const productoData = productoSnapshot.docs.map((doc) => doc.data());
+      const productoData = productoSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
       const tematicasSnapshot = await app.firestore().collection("tematicas").get();
       const tematicasData = tematicasSnapshot.docs.map((doc) => doc.data());
