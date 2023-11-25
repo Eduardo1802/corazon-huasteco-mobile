@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useRoute } from "@react-navigation/native";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { StyleSheet, View, ScrollView, Image, Dimensions } from "react-native";
 import {
   Button,
   Text,
@@ -16,10 +16,31 @@ import { useAuth } from "../../context/AuthContext";
 import { app } from "../../config/firebase";
 import moment from "moment";
 
+const windowWidth = Dimensions.get("window").width;
+
 const Tematicas = () => {
   const { user } = useAuth();
   const route = useRoute();
   const { item } = route.params;
+  const scrollViewRef = useRef();
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleScroll = (event) => {
+    const contentOffsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(contentOffsetX / windowWidth);
+    setCurrentIndex(newIndex);
+  };
+
+  const imageUrls = [item.imagen, item.imagen, item.imagen];
+
+  const renderImages = () => {
+    return imageUrls.map((imageUrl, index) => (
+      <View key={index} style={styles.slide}>
+        <Image source={{ uri: imageUrl }} style={styles.image} />
+      </View>
+    ));
+  };
+
   // Ventana emergente
   const [visible, setVisible] = useState(false);
   const close = () => setVisible(false);
@@ -59,7 +80,7 @@ const Tematicas = () => {
 
   const [datos, setDatos] = useState([]);
   const obtenerName = async () => {
-    if(user){
+    if (user) {
       const coleccionRef = app.firestore().collection("usuarios");
       coleccionRef.where("email", "==", user.email).onSnapshot((snapshot) => {
         const data = snapshot.docs.map((doc) => doc.data());
@@ -106,7 +127,7 @@ const Tematicas = () => {
       titulo: item.titulo,
       tematica: item.tematica,
       comentario: comentario,
-      name: datos.length > 0 ? datos[0].name : 'Nombre no disponible'
+      name: datos.length > 0 ? datos[0].name : "Nombre no disponible",
     });
     alert("Comentario enviado con exito.");
     setVisible(false);
@@ -137,11 +158,34 @@ const Tematicas = () => {
           <Divider style={styles.divider} />
           <Card.Title title={item.tematica} />
           <Card.Content>
-            <Card.Cover
+            <ScrollView
+              ref={scrollViewRef}
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={handleScroll}
+              contentContainerStyle={styles.scrollViewContent}
+            >
+              {renderImages()}
+            </ScrollView>
+            <View style={styles.dotsContainer}>
+              {imageUrls.map((_, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.dot,
+                    { color: index === currentIndex ? "#531949" : "lightgray" },
+                  ]}
+                >
+                  ⬤
+                </Text>
+              ))}
+            </View>
+            {/* <Card.Cover
               source={{
                 uri: item.imagen,
               }}
-            />
+            /> */}
             <Text variant="bodyMedium" style={styles.content}>
               {item.informacion}
             </Text>
@@ -157,7 +201,10 @@ const Tematicas = () => {
               </Dialog.Title>
               <Dialog.Content>
                 <Divider style={styles.divider2} />
-                <Text>Usuario: {datos.length > 0 ? datos[0].name : 'Nombre no disponible'}</Text>
+                <Text>
+                  Usuario:{" "}
+                  {datos.length > 0 ? datos[0].name : "Nombre no disponible"}
+                </Text>
                 <Divider style={styles.divider2} />
                 <Text>Foto de perfil</Text>
                 <Avatar.Image
@@ -285,6 +332,19 @@ const styles = StyleSheet.create({
   },
   textinput: {
     marginBottom: 10,
+  },
+  image: {
+    flex: 1,
+    width: windowWidth - 72,
+    height: 220,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  dotsContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 5,
   },
 });
 
