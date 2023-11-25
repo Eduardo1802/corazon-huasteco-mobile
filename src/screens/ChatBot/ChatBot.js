@@ -88,66 +88,71 @@ const ChatBot = ({ navigation }) => {
           />
           <Divider />
 
-          {/* Conversaciones */}
-          {conversations.map((conversation, index) => (
-            <React.Fragment key={index}>
-              {/* PREGUNTA DEL USUARIO */}
-              {conversation.user_query !== "" && (
-                <Card style={styles.card}>
-                  <Card.Content>
-                    <Card.Title
-                      title={
-                        <Text style={{ fontWeight: "bold" }}>{user.email}</Text>
-                      }
-                      left={(props) => (
-                        <Avatar.Image
-                          size={44}
-                          source={require("../../../assets/img/chatbot/perfil.png")}
-                        />
-                      )}
-                    />
-                    <Text style={{ textAlign: "justify" }}>
-                      Pregunta: {conversation.user_query}
-                    </Text>
-                    <Text style={{ textAlign: "justify" }}>
-                      {conversation.isLoading && "Cargando..."}
-                    </Text>
-                  </Card.Content>
-                </Card>
-              )}
+          {/* Conversaciones (invertir el orden) */}
+          {conversations
+            .slice(0)
+            .reverse()
+            .map((conversation, index) => (
+              <React.Fragment key={index}>
+                {/* PREGUNTA DEL USUARIO */}
+                {conversation.user_query !== "" && (
+                  <Card style={styles.card}>
+                    <Card.Content>
+                      <Card.Title
+                        title={
+                          <Text style={{ fontWeight: "bold" }}>
+                            {user.email}
+                          </Text>
+                        }
+                        left={(props) => (
+                          <Avatar.Image
+                            size={44}
+                            source={require("../../../assets/img/chatbot/perfil.png")}
+                          />
+                        )}
+                      />
+                      <Text style={{ textAlign: "justify" }}>
+                        Pregunta: {conversation.user_query}
+                      </Text>
+                      <Text style={{ textAlign: "justify" }}>
+                        {conversation.isLoading && "Cargando..."}
+                      </Text>
+                    </Card.Content>
+                  </Card>
+                )}
 
-              {/* RESPUESTA DEL CHATBOT */}
-              {conversation.predictionData !== "" && (
-                <Card style={styles.card}>
-                  <Card.Content>
-                    <Card.Title
-                      subtitle={
-                        <Text
-                          style={{ textAlign: "right", fontWeight: "bold" }}
-                        >
-                          ChatBot
-                        </Text>
-                      }
-                      right={(props) => (
-                        <Avatar.Image
-                          size={44}
-                          source={require("../../../assets/img/chatbot/bot.jpg")}
-                        />
-                      )}
-                    />
-                    <Text style={{ textAlign: "justify" }}>
-                      Respuesta: {conversation.isLoading && "Cargando..."}
-                    </Text>
-                    <Text style={{ textAlign: "justify" }}>
-                      {conversation.isEmptyResponse
-                        ? "La respuesta está vacía."
-                        : conversation.predictionData.answer}
-                    </Text>
-                  </Card.Content>
-                </Card>
-              )}
-            </React.Fragment>
-          ))}
+                {/* RESPUESTA DEL CHATBOT */}
+                {conversation.predictionData !== "" && (
+                  <Card style={styles.card}>
+                    <Card.Content>
+                      <Card.Title
+                        subtitle={
+                          <Text
+                            style={{ textAlign: "right", fontWeight: "bold" }}
+                          >
+                            ChatBot
+                          </Text>
+                        }
+                        right={(props) => (
+                          <Avatar.Image
+                            size={44}
+                            source={require("../../../assets/img/chatbot/bot.jpg")}
+                          />
+                        )}
+                      />
+                      <Text style={{ textAlign: "justify" }}>
+                        Respuesta: {conversation.isLoading && "Cargando..."}
+                      </Text>
+                      <Text style={{ textAlign: "justify" }}>
+                        {conversation.isEmptyResponse
+                          ? "La respuesta está vacía."
+                          : conversation.predictionData.answer}
+                      </Text>
+                    </Card.Content>
+                  </Card>
+                )}
+              </React.Fragment>
+            ))}
         </View>
       ) : (
         <View>
