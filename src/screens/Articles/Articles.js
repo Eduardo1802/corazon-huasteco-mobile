@@ -45,7 +45,7 @@ const Articles = ({ navigation }) => {
           <Todos navigation={navigation}/>
         )}
         {value === "chat" && (
-          <ChatBot/>
+          <ChatBot navigation={navigation}/>
         )}
       </View>
     </ScrollView>
