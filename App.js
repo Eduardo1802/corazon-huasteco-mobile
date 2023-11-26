@@ -6,8 +6,9 @@ import {
 } from "react-native-paper";
 import Navigation from "./src/navigation/Navigation";
 import { AuthProvider } from "./src/context/AuthContext";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SP_KEYP } from "@env";
+import { StripeProvider } from "@stripe/stripe-react-native";
 export default function App() {
   const customColors = {
     primary: "#531949",
@@ -40,7 +41,13 @@ export default function App() {
       <SafeAreaProvider>
         <PaperProvider theme={theme}>
           <AuthProvider>
-            <Navigation />
+            <StripeProvider
+              publishableKey={SP_KEYP}
+              merchantIdentifier="merchant.identifier" // required for Apple Pay
+              urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+            >
+              <Navigation />
+            </StripeProvider>
           </AuthProvider>
         </PaperProvider>
       </SafeAreaProvider>

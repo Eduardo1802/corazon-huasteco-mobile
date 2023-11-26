@@ -10,6 +10,7 @@ import {
   Divider,
   TextInput,
   Avatar,
+  SafeAreaView,
 } from "react-native-paper";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -21,12 +22,20 @@ import {
   setDoc,
   addDoc,
   deleteDoc,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../config/firebaseDB";
 import { Picker } from "@react-native-picker/picker";
 import { Badge } from "react-native-paper";
 import { ScrollView } from "react-native";
+import {
+  createPaymentMethod,
+  CardField,confirmPayment
+} from "@stripe/stripe-react-native";
+import { StripeProvider } from "@stripe/stripe-react-native";
+import { createToken } from "@stripe/stripe-react-native";
+import creatPaymentIntent from "../../apis/stripeApis";
+import ButtonComp from "../../components/customs/ButtonComp";
 
 const Carrito = () => {
   const { user } = useAuth();
@@ -40,11 +49,22 @@ const Carrito = () => {
   const [cvv, setCvv] = useState("");
   const [nombre, setNombre] = useState("");
   const [total, setTotal] = useState(1);
+  const [cardInfo, setCardInfo] = useState(null);
+  const SP_KEYP="pk_test_51OGS1EKVFUQAyuHt7Yj0R5H6ZkS6xp8h2XEAZX2Q2EDWTKYv0wBYgAV9lLnkJNMR2Wy0Ge8BgYefbHNKQe6toHH400wGmAdu97"
+  const [datosTarjeta, setDatosTarjeta] = useState({
+    numero: "",
+    expMes: "",
+    expAnio: "",
+    cvc: "",
+  });
+  const SP_KEY =
+    "pk_test_51Gv593DMjMrn6fVZMhwb2YX4gyzXEWhP0ihV5otr858CmPRUECpONtETyCCT9CSrMZfNtI58Rk0GXdboxGrsswXE00VyAarhnk";
 
   // Ventana emergente carrito de compras
   const [visibleCarrito, setVisibleCarrito] = React.useState(false);
   const closeCarrito = () => setVisibleCarrito(false);
   const openCarrito = () => setVisibleCarrito(true);
+  const [errorPago, setErrorPago] = useState(null);
 
   const handleEliminarProducto = async (id) => {
     if (user) {
@@ -72,7 +92,7 @@ const Carrito = () => {
     // Cambia la etapa al siguiente paso
     setEtapa(etapa + 1);
   };
-  
+
   const editarCantidad = async (item, valor) => {
     const valorNumerico = parseInt(valor);
 
@@ -121,15 +141,51 @@ const Carrito = () => {
       setProductosData(productos);
     }
   };
+  const fetchCardDetail = (cardDetail) => {
+    if (cardDetail.complete) {
+      setCardInfo(cardDetail);
+    } else {
+      setCardInfo(null);
+    }
+  };
+  const onDone = async () => {
+    let apiData = {
+      amount: total*100,
+      currency: "mxn",
+      description:`ID cliente ${user.uid}`
+    };
+
+    try {
+      const res = await creatPaymentIntent(apiData);
+      console.log("payment intent create succesfully...!!!", res);
+
+      if (res?.data?.paymentIntent) {
+        let confirmPaymentIntent = await confirmPayment(
+          res?.data?.paymentIntent,
+          { paymentMethodType: "Card" }
+        );
+        console.log("confirmPaymentIntent res++++", confirmPaymentIntent);
+        alert("Payment succesfully...!!!");
+        closeCarrito();
+      }
+    } catch (error) {
+      console.log("Error rasied during payment intent", error);
+    }
+  };
+
 
   useEffect(() => {
     obtenerDatosCarritoYSumar();
   }, [user]);
   useEffect(() => {
     // Calcula el total cuando carritoData o productosData cambien
-    var nuevoTotal = carritoData.reduce((total, [productoId, item]) => (
-      productoId !== "total" ? total + item * (productosData[productoId]?.costo || 0) : total
-    ), 0);
+    var nuevoTotal = carritoData.reduce(
+      (total, [productoId, item]) =>
+        productoId !== "total"
+          ? total + item * (productosData[productoId]?.costo || 0)
+          : total,
+      0
+    );
 
     // Establece el nuevo total en el estado
     setTotal(nuevoTotal.toFixed(2));
@@ -221,14 +277,16 @@ const Carrito = () => {
                   return null; // Asegúrate de devolver algo en todos los casos del map
                 })}
                 {/* Texto que muestra el total general */}
-                <Text style={{ margin: 20, textAlign: "right" }}>Total: ${total} </Text>
+                <Text style={{ margin: 20, textAlign: "right" }}>
+                  Total: ${total}{" "}
+                </Text>
               </ScrollView>
             )}
 
             {etapa === 1 && (
-              // Contenido para la etapa de la Tarjeta
               <View style={styles.formContainer}>
                 {/* Nombre del Propietario */}
+
                 <TextInput
                   label="Nombre del Propietario"
                   value={nombre}
@@ -236,66 +294,38 @@ const Carrito = () => {
                   left={<TextInput.Icon name="account" />}
                   style={styles.input}
                 />
+                <StripeProvider
+              publishableKey={SP_KEYP}
+              merchantIdentifier="merchant.identifier" // required for Apple Pay
+              urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+            >
+              
+                  <CardField
+                    postalCodeEnabled={false}
+                    placeholders={{
+                      number: "4242 4242 4242 4242",
+                    }}
+                    cardStyle={{
+                      backgroundColor: "#FFFFFF",
+                      textColor: "#000000",
+                    }}
+                    style={{
+                      width: "100%",
+                      height: 50,
+                      marginVertical: 30,
+                    }}
+                    onCardChange={(cardDetails) => {
+                      fetchCardDetail(cardDetails);
+                    }}
+                    onFocus={(focusedField) => {
+                      console.log("focusField", focusedField);
+                    }}
+                  />
 
-                {/* Número de Tarjeta */}
-                <TextInput
-                  label="Número de Tarjeta"
-                  value={tarjeta}
-                  onChangeText={(text) => setTarjeta(text)}
-                  keyboardType="numeric"
-                  left={<TextInput.Icon name="credit-card" />}
-                  style={styles.input}
-                />
-
-                {/* Fecha de Caducidad */}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <View style={{ flex: 1, marginRight: 10 }}>
-                    <TextInput
-                      label="Mes"
-                      value={mes}
-                      onChangeText={(text) => {
-                        // Limitar la entrada del mes entre 1 y 12
-                        const numericValue = parseInt(text, 10);
-                        if (
-                          !isNaN(numericValue) &&
-                          numericValue >= 1 &&
-                          numericValue <= 12
-                        ) {
-                          setMes(text);
-                        }
-                      }}
-                      keyboardType="numeric"
-                      left={<TextInput.Icon name="calendar-month" />}
-                      style={styles.input}
-                    />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <TextInput
-                      label="Año"
-                      value={anio}
-                      onChangeText={(text) => setAnio(text)}
-                      keyboardType="numeric"
-                      left={<TextInput.Icon name="calendar-check" />}
-                      style={styles.input}
-                    />
-                  </View>
-                </View>
-
-                {/* Código CVV */}
-                <TextInput
-                  label="CVV"
-                  value={cvv}
-                  onChangeText={(text) => setCvv(text)}
-                  keyboardType="numeric"
-                  left={<TextInput.Icon name="lock" />}
-                  style={styles.input}
-                />
+                
+              
+            </StripeProvider>
+                 
               </View>
             )}
           </Dialog.Content>
@@ -310,7 +340,7 @@ const Carrito = () => {
 
             {/* Botón de Comprar */}
             {etapa === 1 && (
-              <Button onPress={() => console.log("Comprar")}>Comprar</Button>
+               <ButtonComp onPress={onDone} disabled={!cardInfo} />
             )}
 
             {/* Botón de Siguiente */}
