@@ -121,7 +121,6 @@ const Tienda = ({ navigation }) => {
     setProductos(resultadoBusqueda);
   };
 
-
   // Ventana emergente filtros
   const [visibleFiltros, setVisibleFiltros] = useState(false);
   const closefiltros = () => setVisibleFiltros(false);
@@ -130,10 +129,26 @@ const Tienda = ({ navigation }) => {
   const [portavela, setPortavela] = useState(false);
   const [plato, setPlato] = useState(false);
   const [tequilero, setTequilero] = useState(false);
+  const [tortillero, setTortillero] = useState(false);
+  const [taza, setTaza] = useState(false);
+  const [canasta, setCanasta] = useState(false);
+  const [casuela, setCasuela] = useState(false);
+  const [copalero, setCopalero] = useState(false);
+  const [jarron, setJarron] = useState(false);
+  const [florero, setFlorero] = useState(false);
+  const [olla, setOlla] = useState(false);
+
   // Color
   const [rojo, setRojo] = useState(false);
   const [blanco, setBlanco] = useState(false);
   const [azul, setAzul] = useState(false);
+  const [rosa, setRosa] = useState(false);
+  const [morado, setMorado] = useState(false);
+  const [beige, setBeige] = useState(false);
+  const [cafe, setCafe] = useState(false);
+  const [gris, setGris] = useState(false);
+  const [verde, setVerde] = useState(false);
+  const [negro, setNegro] = useState(false);
 
   const recuperarDatosLocalmente = async () => {
     try {
@@ -164,7 +179,6 @@ const Tienda = ({ navigation }) => {
     recuperarDatosLocalmente();
   }, []);
 
-
   const alertStyles = {
     container: {
       backgroundColor: "#fff",
@@ -192,6 +206,74 @@ const Tienda = ({ navigation }) => {
       fontSize: 16,
     },
   };
+
+  const handleSearch = () => {
+    let resultadoBusqueda = tablaProyectos;
+  
+    // Filtrar por categoría
+    if (portavela || plato || tequilero || tortillero || taza || canasta || casuela || copalero || jarron || florero || olla) {
+      resultadoBusqueda = resultadoBusqueda.filter(producto => {
+        if (portavela && producto.categoria === 'Portavela') return true;
+        if (plato && producto.categoria === 'Plato') return true;
+        if (tequilero && producto.categoria === 'Tequilero') return true;
+        if (tortillero && producto.categoria === 'Tortillero') return true;
+        if (taza && producto.categoria === 'Taza') return true;
+        if (canasta && producto.categoria === 'Canasta') return true;
+        if (casuela && producto.categoria === 'Casuela') return true;
+        if (copalero && producto.categoria === 'Copalero') return true;
+        if (jarron && producto.categoria === 'Jarron') return true;
+        if (florero && producto.categoria === 'Florero') return true;
+        if (olla && producto.categoria === 'Olla') return true;
+        return false;
+      });
+    }
+  
+    // Filtrar por color
+    if (rojo || blanco || azul || rosa || morado || beige || cafe || gris || verde || negro) {
+      resultadoBusqueda = resultadoBusqueda.filter(producto => {
+        if (rojo && producto.color === 'rojo') return true;
+        if (blanco && producto.color === 'blanco') return true;
+        if (azul && producto.color === 'azul') return true;
+        if (rosa && producto.color === 'rosa') return true;
+        if (morado && producto.color === 'morado') return true;
+        if (beige && producto.color === 'beige') return true;
+        if (cafe && producto.color === 'cafe') return true;
+        if (gris && producto.color === 'gris') return true;
+        if (verde && producto.color === 'verde') return true;
+        if (negro && producto.color === 'negro') return true;
+        return false;
+      });
+    }
+  
+    setProductos(resultadoBusqueda);
+    closefiltros();
+  };
+
+  const clearFilters = () => {
+    setPortavela(false);
+    setPlato(false);
+    setTequilero(false);
+    setTortillero(false);
+    setTaza(false);
+    setCanasta(false);
+    setCasuela(false);
+    setCopalero(false);
+    setJarron(false);
+    setFlorero(false);
+    setOlla(false);
+  
+    setRojo(false);
+    setBlanco(false);
+    setAzul(false);
+    setRosa(false);
+    setMorado(false);
+    setBeige(false);
+    setCafe(false);
+    setGris(false);
+    setVerde(false);
+    setNegro(false);
+    showAlertSuccess("Se han limpiado los filtros");
+  }
 
   return (
     <ScrollView>
@@ -221,10 +303,10 @@ const Tienda = ({ navigation }) => {
         <Card>
           <View style={styles.searchBarContainer}>
             <Searchbar
-            placeholder="Buscar..."
-            onChangeText={onChangeSearch}
-            value={busqueda}
-            style={styles.searchbar}
+              placeholder="Buscar..."
+              onChangeText={onChangeSearch}
+              value={busqueda}
+              style={styles.searchbar}
             />
           </View>
           <Button
@@ -239,100 +321,290 @@ const Tienda = ({ navigation }) => {
         {/* DAR CLICK EN FILTROS */}
         <Portal>
           <Dialog visible={visibleFiltros} onDismiss={closefiltros}>
-            <Dialog.Title style={styles.title}>Filtros</Dialog.Title>
-            <Dialog.Content>
-              <List.Section>
-                <View style={styles.folder}>
-                  <List.Accordion
-                    title="Categoria"
-                    left={(props) => (
-                      <List.Icon {...props} icon="format-list-bulleted" />
-                    )}
-                  >
-                    <List.Item
-                      title="Portavela"
-                      right={(props) => (
-                        <Checkbox
-                          status={portavela ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setPortavela(!portavela);
-                          }}
-                        />
+            <ScrollView>
+              <Dialog.Title style={styles.title}>Filtros</Dialog.Title>
+              <Dialog.Content>
+                <List.Section>
+                  {/* CATEGORIAS */}
+                  <View style={styles.folder}>
+                    <List.Accordion
+                      title="Categoria"
+                      left={(props) => (
+                        <List.Icon {...props} icon="format-list-bulleted" />
                       )}
-                    />
-                    <List.Item
-                      title="Plato"
-                      right={(props) => (
-                        <Checkbox
-                          status={plato ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setPlato(!plato);
-                          }}
-                        />
+                    >
+                      <List.Item
+                        title="Portavela"
+                        right={(props) => (
+                          <Checkbox
+                            status={portavela ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setPortavela(!portavela);
+                            }}
+                            // value="Portavela"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Plato"
+                        right={(props) => (
+                          <Checkbox
+                            status={plato ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setPlato(!plato);
+                            }}
+                            // value="Plato"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Tequilero"
+                        right={(props) => (
+                          <Checkbox
+                            status={tequilero ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setTequilero(!tequilero);
+                            }}
+                            // value="Tequilero"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Tortillero"
+                        right={(props) => (
+                          <Checkbox
+                            status={tortillero ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setTortillero(!tortillero);
+                            }}
+                            // value="Tortillero"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Taza"
+                        right={(props) => (
+                          <Checkbox
+                            status={taza ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setTaza(!taza);
+                            }}
+                            // value="Taza"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Canasta"
+                        right={(props) => (
+                          <Checkbox
+                            status={canasta ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setCanasta(!canasta);
+                            }}
+                            // value="Canasta"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Casuela"
+                        right={(props) => (
+                          <Checkbox
+                            status={casuela ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setCasuela(!casuela);
+                            }}
+                            // value="Casuela"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Copalero"
+                        right={(props) => (
+                          <Checkbox
+                            status={copalero ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setCopalero(!copalero);
+                            }}
+                            // value="Copalero"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Jarrón"
+                        right={(props) => (
+                          <Checkbox
+                            status={jarron ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setJarron(!jarron);
+                            }}
+                            // value="Jarrón"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Florero"
+                        right={(props) => (
+                          <Checkbox
+                            status={florero ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setFlorero(!florero);
+                            }}
+                            // value="Florero"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Olla"
+                        right={(props) => (
+                          <Checkbox
+                            status={olla ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setOlla(!olla);
+                            }}
+                            // value="Olla"
+                          />
+                        )}
+                      />
+                    </List.Accordion>
+                  </View>
+                  {/* COLORES */}
+                  <View style={styles.folder}>
+                    <List.Accordion
+                      title="Color"
+                      left={(props) => (
+                        <List.Icon {...props} icon="border-color" />
                       )}
-                    />
-                    <List.Item
-                      title="Tequilero"
-                      right={(props) => (
-                        <Checkbox
-                          status={tequilero ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setTequilero(!tequilero);
-                          }}
-                        />
-                      )}
-                    />
-                  </List.Accordion>
-                </View>
-
-                <View style={styles.folder}>
-                  <List.Accordion
-                    title="Color"
-                    left={(props) => (
-                      <List.Icon {...props} icon="border-color" />
-                    )}
-                  >
-                    <List.Item
-                      title="Rojo"
-                      right={(props) => (
-                        <Checkbox
-                          status={rojo ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setRojo(!rojo);
-                          }}
-                        />
-                      )}
-                    />
-                    <List.Item
-                      title="Blanco"
-                      right={(props) => (
-                        <Checkbox
-                          status={blanco ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setBlanco(!blanco);
-                          }}
-                        />
-                      )}
-                    />
-                    <List.Item
-                      title="Azul"
-                      right={(props) => (
-                        <Checkbox
-                          status={azul ? "checked" : "unchecked"}
-                          onPress={() => {
-                            setAzul(!azul);
-                          }}
-                        />
-                      )}
-                    />
-                  </List.Accordion>
-                </View>
-              </List.Section>
-            </Dialog.Content>
-            <Dialog.Actions>
-              <Button onPress={closefiltros}>Cancelar</Button>
-              <Button>Filtrar</Button>
-            </Dialog.Actions>
+                    >
+                      <List.Item
+                        title="Rojo"
+                        right={(props) => (
+                          <Checkbox
+                            status={rojo ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setRojo(!rojo);
+                            }}
+                            // value="rojo"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Blanco"
+                        right={(props) => (
+                          <Checkbox
+                            status={blanco ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setBlanco(!blanco);
+                            }}
+                            // value="blanco"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Azul"
+                        right={(props) => (
+                          <Checkbox
+                            status={azul ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setAzul(!azul);
+                            }}
+                            // value="azul"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Rosa"
+                        right={(props) => (
+                          <Checkbox
+                            status={rosa ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setRosa(!rosa);
+                            }}
+                            // value="rosa"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Morado"
+                        right={(props) => (
+                          <Checkbox
+                            status={morado ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setMorado(!morado);
+                            }}
+                            // value="morado"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Beige"
+                        right={(props) => (
+                          <Checkbox
+                            status={beige ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setBeige(!beige);
+                            }}
+                            // value="beige"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Cafe"
+                        right={(props) => (
+                          <Checkbox
+                            status={cafe ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setCafe(!cafe);
+                            }}
+                            // value="cafe"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Gris"
+                        right={(props) => (
+                          <Checkbox
+                            status={gris ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setGris(!gris);
+                            }}
+                            // value="gris"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Verde"
+                        right={(props) => (
+                          <Checkbox
+                            status={verde ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setVerde(!verde);
+                            }}
+                            // value="verde"
+                          />
+                        )}
+                      />
+                      <List.Item
+                        title="Negro"
+                        right={(props) => (
+                          <Checkbox
+                            status={negro ? "checked" : "unchecked"}
+                            onPress={() => {
+                              setNegro(!negro);
+                            }}
+                            // value="negro"
+                          />
+                        )}
+                      />
+                    </List.Accordion>
+                  </View>
+                </List.Section>
+              </Dialog.Content>
+              <Dialog.Actions>
+                <Button onPress={closefiltros}>Cancelar</Button>
+                <Button onPress={clearFilters}>Limpiar</Button>
+                <Button onPress={handleSearch}>Filtrar</Button>
+              </Dialog.Actions>
+            </ScrollView>
           </Dialog>
         </Portal>
 
