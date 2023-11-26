@@ -30,7 +30,8 @@ import { Badge } from "react-native-paper";
 import { ScrollView } from "react-native";
 import {
   createPaymentMethod,
-  CardField,confirmPayment
+  CardField,
+  confirmPayment,
 } from "@stripe/stripe-react-native";
 import { StripeProvider } from "@stripe/stripe-react-native";
 import { createToken } from "@stripe/stripe-react-native";
@@ -48,9 +49,10 @@ const Carrito = () => {
   const [anio, setAnio] = useState("");
   const [cvv, setCvv] = useState("");
   const [nombre, setNombre] = useState("");
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState();
   const [cardInfo, setCardInfo] = useState(null);
-  const SP_KEYP="pk_test_51OGS1EKVFUQAyuHt7Yj0R5H6ZkS6xp8h2XEAZX2Q2EDWTKYv0wBYgAV9lLnkJNMR2Wy0Ge8BgYefbHNKQe6toHH400wGmAdu97"
+  const SP_KEYP =
+    "pk_test_51OGS1EKVFUQAyuHt7Yj0R5H6ZkS6xp8h2XEAZX2Q2EDWTKYv0wBYgAV9lLnkJNMR2Wy0Ge8BgYefbHNKQe6toHH400wGmAdu97";
   const [datosTarjeta, setDatosTarjeta] = useState({
     numero: "",
     expMes: "",
@@ -114,6 +116,36 @@ const Carrito = () => {
     });
   };
 
+  const registrarVentas = async () => {
+    if (user) {
+      const ventaRef = collection(db, "ventas");
+
+      // Loop through each product in the carritoData and create a sale record
+      for (const [id, item] of carritoData) {
+        if (id !== "total" && productosData[id]) {
+          const productoData = productosData[id];
+          const cantidad = item;
+
+          // Create a sale record for each product
+          await addDoc(ventaRef, {
+            usuario: user.uid,
+            nombreProducto: productoData.nombre,
+            cantidadProducto: cantidad,
+            costo: productoData.costo,
+            costo_total: cantidad * productoData.costo,
+            fecha: new Date().toISOString(),
+            categoria: productoData.categoria,
+            color: productoData.color,
+            metodoPago: "tarjeta de crédito",
+          });
+        }
+      }
+
+      // After creating the sale records, remove the carritoUsuario document
+      const referenciaCarrito = doc(db, `carritoUsuario/${user.uid}`);
+      await deleteDoc(referenciaCarrito);
+    }
+  };
   const obtenerDatosCarritoYSumar = async () => {
     if (user) {
       const referenciaCarrito = doc(db, `carritoUsuario/${user.uid}`);
@@ -126,12 +158,12 @@ const Carrito = () => {
       onSnapshot(referenciaUsuario, (docSnap) => {
         const data = docSnap.exists() ? docSnap.data() : null;
         setTarjeta(data ? data.numeroTarjeta : "");
+        setNombre(data.name);
       });
 
       const referenciaProductos = collection(db, "producto");
       const querySnapshot = await getDocs(referenciaProductos);
       const productos = {};
-      setNombre(user.email);
 
       querySnapshot.forEach((doc) => {
         const producto = doc.data();
@@ -150,14 +182,14 @@ const Carrito = () => {
   };
   const onDone = async () => {
     let apiData = {
-      amount: total*100,
+      amount: total * 100,
       currency: "mxn",
-      description:`ID cliente ${user.uid}`
+      description: `ID cliente ${user.uid}`,
     };
 
     try {
       const res = await creatPaymentIntent(apiData);
-      console.log("payment intent create succesfully...!!!", res);
+      console.log("El pago se a echo correctamente", res);
 
       if (res?.data?.paymentIntent) {
         let confirmPaymentIntent = await confirmPayment(
@@ -167,12 +199,13 @@ const Carrito = () => {
         console.log("confirmPaymentIntent res++++", confirmPaymentIntent);
         alert("Payment succesfully...!!!");
         closeCarrito();
+        registrarVentas();
+        setEtapa(0);
       }
     } catch (error) {
       console.log("Error rasied during payment intent", error);
     }
   };
-
 
   useEffect(() => {
     obtenerDatosCarritoYSumar();
@@ -209,97 +242,104 @@ const Carrito = () => {
         <Dialog visible={visibleCarrito} onDismiss={closeCarrito}>
           <Dialog.Title style={styles.title}>Carrito de compras</Dialog.Title>
           <Dialog.Content>
-            {etapa === 0 && (
-              <ScrollView>
-                {carritoData.map(([productoId, item]) => {
-                  const producto = productosData[productoId];
+            {etapa === 0 ? (
+              sumaNumeros === 0 ? (
+                <Dialog.Title style={styles.title}>
+                  No cuentas con ningún producto registrado.
+                </Dialog.Title>
+              ) : (
+                <ScrollView>
+                  {carritoData.map(([productoId, item]) => {
+                    const producto = productosData[productoId];
 
-                  if (productoId !== "total" && productosData[productoId]) {
-                    return (
-                      <View key={productoId}>
-                        {/* Card con el nombre del producto y su imagen */}
-                        <Card.Title
-                          title={producto?.nombre ?? "Nombre no disponible"}
-                          titleStyle={{ color: "#531949" }}
-                          left={(props) => (
-                            <Avatar.Image
-                              {...props}
-                              size={44}
-                              source={{ uri: producto?.url ?? "" }}
-                            />
-                          )}
-                        />
+                    if (productoId !== "total" && productosData[productoId]) {
+                      return (
+                        <View key={productoId}>
+                          {/* Card con el nombre del producto y su imagen */}
+                          <Card.Title
+                            title={producto?.nombre ?? "Nombre no disponible"}
+                            titleStyle={{ color: "#531949" }}
+                            left={(props) => (
+                              <Avatar.Image
+                                {...props}
+                                size={44}
+                                source={{ uri: producto?.url ?? "" }}
+                              />
+                            )}
+                          />
 
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          {/* Nuevo Apartado 2: Selección de Cantidad */}
                           <View
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
+                              justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{ margin: 20 }}>Cantidad:</Text>
-                            <Picker
-                              selectedValue={item}
-                              onValueChange={(item) => {
-                                editarCantidad(productoId, item);
+                            {/* Nuevo Apartado 2: Selección de Cantidad */}
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
                               }}
-                              style={{ height: 50, width: 100 }}
                             >
-                              {[...Array(5).keys()].map((num) => (
-                                <Picker.Item
-                                  key={num}
-                                  label={`${num + 1}`}
-                                  value={num + 1}
-                                />
-                              ))}
-                            </Picker>
+                              <Text style={{ margin: 20 }}>Cantidad:</Text>
+                              <Picker
+                                selectedValue={item}
+                                onValueChange={(item) => {
+                                  editarCantidad(productoId, item);
+                                }}
+                                style={{ height: 50, width: 100 }}
+                              >
+                                {[...Array(5).keys()].map((num) => (
+                                  <Picker.Item
+                                    key={num}
+                                    label={`${num + 1}`}
+                                    value={num + 1}
+                                  />
+                                ))}
+                              </Picker>
+                            </View>
+
+                            {/* Nuevo Apartado 3: Botón de Eliminar */}
+                            <Button
+                              onPress={() => handleEliminarProducto(productoId)}
+                            >
+                              Eliminar
+                            </Button>
                           </View>
-
-                          {/* Nuevo Apartado 3: Botón de Eliminar */}
-                          <Button
-                            onPress={() => handleEliminarProducto(productoId)}
-                          >
-                            Eliminar
-                          </Button>
+                          <Divider />
                         </View>
-                        <Divider />
-                      </View>
-                    );
-                  }
+                      );
+                    }
 
-                  return null; // Asegúrate de devolver algo en todos los casos del map
-                })}
-                {/* Texto que muestra el total general */}
-                <Text style={{ margin: 20, textAlign: "right" }}>
-                  Total: ${total}{" "}
-                </Text>
-              </ScrollView>
-            )}
+                    return null; // Asegúrate de devolver algo en todos los casos del map
+                  })}
+                  {/* Texto que muestra el total general */}
+                  <Text style={{ margin: 20, textAlign: "right" }}>
+                    Total: ${total}{" "}
+                  </Text>
+                </ScrollView>
+              )
+            ) : null}
 
             {etapa === 1 && (
               <View style={styles.formContainer}>
                 {/* Nombre del Propietario */}
 
                 <TextInput
+                  icon="google"
                   label="Nombre del Propietario"
                   value={nombre}
                   onChangeText={(text) => setNombre(text)}
-                  left={<TextInput.Icon name="account" />}
                   style={styles.input}
                 />
+                <Text>Total a pagar {total}</Text>
+                <Text>Introduce la informacion de tu tarjeta</Text>
                 <StripeProvider
-              publishableKey={SP_KEYP}
-              merchantIdentifier="merchant.identifier" // required for Apple Pay
-              urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
-            >
-              
+                  publishableKey={SP_KEYP}
+                  merchantIdentifier="merchant.identifier" // required for Apple Pay
+                  urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+                >
                   <CardField
                     postalCodeEnabled={false}
                     placeholders={{
@@ -321,9 +361,7 @@ const Carrito = () => {
                       console.log("focusField", focusedField);
                     }}
                   />
-              
-            </StripeProvider>
-                 
+                </StripeProvider>
               </View>
             )}
           </Dialog.Content>
@@ -338,11 +376,16 @@ const Carrito = () => {
 
             {/* Botón de Comprar */}
             {etapa === 1 && (
-              <ButtonComp onPress={() => { onDone() }} disabled={!cardInfo} />
+              <ButtonComp
+                onPress={() => {
+                  onDone();
+                }}
+                disabled={!cardInfo}
+              />
             )}
 
             {/* Botón de Siguiente */}
-            {etapa === 0 && (
+            {etapa === 0 && sumaNumeros !== 0 && (
               <Button onPress={handleSiguiente}>Siguiente</Button>
             )}
           </Dialog.Actions>
