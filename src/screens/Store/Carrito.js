@@ -321,8 +321,6 @@ const Carrito = () => {
                       console.log("focusField", focusedField);
                     }}
                   />
-
-                
               
             </StripeProvider>
                  
@@ -340,7 +338,7 @@ const Carrito = () => {
 
             {/* Botón de Comprar */}
             {etapa === 1 && (
-               <ButtonComp onPress={onDone} disabled={!cardInfo} />
+              <ButtonComp onPress={() => { onDone() }} disabled={!cardInfo} />
             )}
 
             {/* Botón de Siguiente */}
