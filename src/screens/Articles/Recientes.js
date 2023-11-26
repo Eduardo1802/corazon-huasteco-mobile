@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Card, Text, Button, Dialog, Portal } from "react-native-paper";
 import { app } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const Recientes = ({ navigation }) => {
   const { user } = useAuth();
@@ -79,15 +80,43 @@ const Recientes = ({ navigation }) => {
     }
   };
 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Éxito",
+      alertMessage: message,
+      alertType: "success",
+    });
+  };
+
+  const showAlertError = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Error",
+      alertMessage: message,
+      alertType: "error",
+    });
+  };
+
   const [selectedItem, setSelectedItem] = useState(null);
   const guardarArticulos = async (item) => {
     if (user) {
       setSelectedItem(item);
       const docList = await app.firestore().collection("guardados").get();
       const datos = docList.docs
-        .filter((doc) => doc.data().email === user.email && doc.data().titulo === item.titulo)
-        .map((doc) => doc.data())
-      if(datos.length === 0){
+        .filter(
+          (doc) =>
+            doc.data().email === user.email && doc.data().titulo === item.titulo
+        )
+        .map((doc) => doc.data());
+      if (datos.length === 0) {
         const coleccionRef = app.firestore().collection("guardados");
         await coleccionRef.doc(`${new Date().getTime()}`).set({
           email: user.email,
@@ -97,12 +126,14 @@ const Recientes = ({ navigation }) => {
           tematica: item.tematica,
           titulo: item.titulo,
         });
-        alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
-      }else{
-        alert(`La temática: ${item.titulo} ya ha sido guardada.`);
+        showAlertSuccess(
+          `La temática: ${item.titulo} se ha guardado con éxito.`
+        );
+      } else {
+        showAlertError(`La temática: ${item.titulo} ya ha sido guardada.`);
       }
-    }else{
-      alert("Para poder guardar un artículo debes iniciar sesión");
+    } else {
+      showAlertError("Para poder guardar un artículo debes iniciar sesión");
     }
   };
 
@@ -110,8 +141,56 @@ const Recientes = ({ navigation }) => {
     recuperarDatosLocalmente();
   }, []);
 
+  const alertStyles = {
+    container: {
+      backgroundColor: "#fff",
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#531949",
+    },
+    messageText: {
+      fontSize: 16,
+      color: "#333",
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: "#531949",
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+  };
+
   return (
     <>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       {/* ARTÍCULOS */}
       {tematicasfecha.map((producto, index) => (
         <View key={index}>

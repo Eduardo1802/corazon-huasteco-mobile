@@ -13,6 +13,7 @@ import {
 } from "react-native-paper";
 import { app } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Todos = ({ navigation }) => {
   const { user } = useAuth();
@@ -76,6 +77,31 @@ const Todos = ({ navigation }) => {
     }
   };
 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: 'Éxito',
+      alertMessage: message,
+      alertType: 'success',
+    });
+  };
+
+  const showAlertError = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: 'Error',
+      alertMessage: message,
+      alertType: 'error',
+    });
+  };
+  
   const [selectedItem, setSelectedItem] = useState(null);
   const guardarArticulos = async (item) => {
     if (user) {
@@ -106,12 +132,15 @@ const Todos = ({ navigation }) => {
             titulo: item.titulo,
           });
         }
-        alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
+        // alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
+        showAlertSuccess(`La temática: ${item.titulo} se ha guardado con éxito.`)
       }else{
-        alert(`La temática: ${item.titulo} ya ha sido guardada.`);
+        // alert(`La temática: ${item.titulo} ya ha sido guardada.`);
+        showAlertError(`La temática: ${item.titulo} ya ha sido guardada.`);
       }
     }else{
-      alert("Para poder guardar un artículo debes iniciar sesión");
+      // alert("Para poder guardar un artículo debes iniciar sesión");
+      showAlertError("Para poder guardar un artículo debes iniciar sesión");
     }
   };
 
@@ -119,8 +148,56 @@ const Todos = ({ navigation }) => {
     recuperarDatosLocalmente();
   }, []);
 
+  const alertStyles = {
+    container: {
+      backgroundColor: '#fff',
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#531949',
+    },
+    messageText: {
+      fontSize: 16,
+      color: '#333',
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: '#531949',
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 16,
+    },
+  };
+
   return (
     <View>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       <Card>
         <View style={styles.searchBarContainer}>
           <Searchbar

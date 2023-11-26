@@ -3,6 +3,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import { Button, Text, Card, Searchbar } from "react-native-paper";
 import { app } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const Articulos = ({ navigation }) => {
   const { user } = useAuth();
@@ -21,6 +22,31 @@ const Articulos = ({ navigation }) => {
     setArticulos(datos);
   };
 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Éxito",
+      alertMessage: message,
+      alertType: "success",
+    });
+  };
+
+  const showAlertError = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Error",
+      alertMessage: message,
+      alertType: "error",
+    });
+  };
+
   const eliminarArticulos = async (item) => {
     try {
       const docList = await app.firestore().collection("guardados").get();
@@ -35,9 +61,13 @@ const Articulos = ({ navigation }) => {
           .collection("guardados")
           .doc(documentos[0].id);
         await docRef.delete();
-        alert(`El artículo "${item.titulo}" se eliminó exitosamente.`);
+        showAlertSuccess(
+          `El artículo "${item.titulo}" se eliminó exitosamente.`
+        );
       } else {
-        alert(`No se encontró el artículo "${item.titulo}" para eliminar.`);
+        showAlertError(
+          `No se encontró el artículo "${item.titulo}" para eliminar.`
+        );
       }
     } catch (error) {
       console.error("Error al eliminar el artículo:", error);
@@ -59,8 +89,56 @@ const Articulos = ({ navigation }) => {
     };
   }, [user.email]);
 
+  const alertStyles = {
+    container: {
+      backgroundColor: "#fff",
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#531949",
+    },
+    messageText: {
+      fontSize: 16,
+      color: "#333",
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: "#531949",
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+  };
+
   return (
     <>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       {articulos.length === 0 ? (
         <View
           style={{

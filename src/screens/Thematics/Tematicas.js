@@ -15,6 +15,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { useAuth } from "../../context/AuthContext";
 import { app } from "../../config/firebase";
 import moment from "moment";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -89,9 +90,34 @@ const Tematicas = () => {
     }
   };
 
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Éxito",
+      alertMessage: message,
+      alertType: "success",
+    });
+  };
+
+  const showAlertError = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: "Error",
+      alertMessage: message,
+      alertType: "error",
+    });
+  };
+
   const enviarComentario = async () => {
     if (comentario.trim() === "") {
-      alert("El comentario es requerido.");
+      showAlertError("El comentario es requerido.");
       return;
     }
     const comentarioExistente = datosComentarios.find(
@@ -100,7 +126,7 @@ const Tematicas = () => {
     );
 
     if (comentarioExistente) {
-      alert("Ya has ingresado un comentario en esta temática.");
+      showAlertError("Ya has ingresado un comentario en esta temática.");
       setVisible(false);
       setComentario("");
       return;
@@ -109,7 +135,7 @@ const Tematicas = () => {
     const comentarioSinEspacios = comentario.toLowerCase().replace(/\s/g, "");
     for (const palabraProhibida of palabrasProhibidas) {
       if (comentarioSinEspacios.includes(palabraProhibida)) {
-        alert("El comentario contiene palabras prohibidas.");
+        showAlertError("El comentario contiene palabras prohibidas.");
         return;
       }
     }
@@ -129,7 +155,7 @@ const Tematicas = () => {
       comentario: comentario,
       name: datos.length > 0 ? datos[0].name : "Nombre no disponible",
     });
-    alert("Comentario enviado con exito.");
+    showAlertSuccess("Comentario enviado con exito.");
     setVisible(false);
     setComentario("");
   };
@@ -149,8 +175,56 @@ const Tematicas = () => {
     obtenerInfo();
   }, []);
 
+  const alertStyles = {
+    container: {
+      backgroundColor: "#fff",
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#531949",
+    },
+    messageText: {
+      fontSize: 16,
+      color: "#333",
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: "#531949",
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+  };
+
   return (
     <ScrollView>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       <View style={styles.container}>
         {/* CONTENIDO */}
         <Card style={styles.card}>
