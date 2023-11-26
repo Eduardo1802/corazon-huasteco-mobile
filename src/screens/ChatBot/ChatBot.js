@@ -15,31 +15,61 @@ const ChatBot = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const onChangeSearch = (query) => setSearchQuery(query);
   const { user } = useAuth();
-  const [user_query, setUser_query] = useState("");
-  const [predictionData, setPredictionData] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isEmptyResponse, setIsEmptyResponse] = useState(false);
+  const [conversations, setConversations] = useState([]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const value_query = searchQuery;
-      setUser_query(value_query);
-      setIsLoading(true);
-      setIsEmptyResponse(false);
+
+      // Crear una nueva conversación
+      const newConversation = {
+        user_query: value_query,
+        isLoading: true,
+        isEmptyResponse: false,
+        predictionData: "",
+      };
+
+      // Actualizar el estado con la nueva conversación
+      setConversations((prevConversations) => [
+        ...prevConversations,
+        newConversation,
+      ]);
+
       const data = { answer: value_query };
       const response = await axios.post(
         "https://eduazuara.pythonanywhere.com/api/predict",
         data
       );
+
       console.log("Respuesta del servidor:", response.data);
       const value_response = response.data;
-      setPredictionData(value_response);
-      setIsLoading(false);
+
+      // Actualizar la conversación con la respuesta del servidor
+      newConversation.isLoading = false;
+      newConversation.predictionData = value_response;
+
+      setConversations((prevConversations) => {
+        const updatedConversations = [...prevConversations];
+        updatedConversations[updatedConversations.length - 1] = newConversation;
+        return updatedConversations;
+      });
+
       setSearchQuery("");
     } catch (error) {
       console.error("Error al hacer la solicitud POST:", error);
-      setIsLoading(false);
+
+      setConversations((prevConversations) => [
+        ...prevConversations,
+        {
+          user_query: searchQuery,
+          isLoading: false,
+          isEmptyResponse: true,
+          predictionData: "",
+        },
+      ]);
+
+      setSearchQuery("");
     }
   };
 
@@ -49,7 +79,7 @@ const ChatBot = ({ navigation }) => {
         <View style={styles.container}>
           <Divider />
           <Searchbar
-            placeholder="Pregunta sobre los artículos" // "Envia tu pregunta sobre Huejutla"
+            placeholder="Pregunta sobre los artículos"
             icon="send"
             onChangeText={onChangeSearch}
             onIconPress={handleSubmit}
@@ -58,63 +88,71 @@ const ChatBot = ({ navigation }) => {
           />
           <Divider />
 
-          {/* PREGUNTA DEL USUARIO */}
-          {user_query !== "" ? (
-            <Card style={styles.card}>
-              <Card.Content>
-                <Card.Title
-                  title={
-                    <Text style={{ fontWeight: "bold" }}>{user.email}</Text>
-                  }
-                  left={(props) => (
-                    <Avatar.Image
-                      size={44}
-                      source={require("../../../assets/img/chatbot/perfil.png")}
-                    />
-                  )}
-                />
-                <Text style={{ textAlign: "justify" }}>
-                  Pregunta: {user_query}
-                </Text>
-                <Text style={{ textAlign: "justify" }}>
-                  {isLoading && "Cargando..."}
-                </Text>
-              </Card.Content>
-            </Card>
-          ) : (
-            <Text style={{ textAlign: "justify" }}></Text>
-          )}
+          {/* Conversaciones (invertir el orden) */}
+          {conversations
+            .slice(0)
+            .reverse()
+            .map((conversation, index) => (
+              <React.Fragment key={index}>
+                {/* PREGUNTA DEL USUARIO */}
+                {conversation.user_query !== "" && (
+                  <Card style={styles.card}>
+                    <Card.Content>
+                      <Card.Title
+                        title={
+                          <Text style={{ fontWeight: "bold" }}>
+                            {user.email}
+                          </Text>
+                        }
+                        left={(props) => (
+                          <Avatar.Image
+                            size={44}
+                            source={require("../../../assets/img/chatbot/perfil.png")}
+                          />
+                        )}
+                      />
+                      <Text style={{ textAlign: "justify" }}>
+                        Pregunta: {conversation.user_query}
+                      </Text>
+                      <Text style={{ textAlign: "justify" }}>
+                        {conversation.isLoading && "Cargando..."}
+                      </Text>
+                    </Card.Content>
+                  </Card>
+                )}
 
-          {/* RESPUESTA DEL CHATBOT */}
-          {predictionData !== "" ? (
-            <Card style={styles.card}>
-              <Card.Content>
-                <Card.Title
-                  subtitle={
-                    <Text style={{ textAlign: "right", fontWeight: "bold" }}>
-                      ChatBot
-                    </Text>
-                  }
-                  right={(props) => (
-                    <Avatar.Image
-                      size={44}
-                      source={require("../../../assets/img/chatbot/bot.jpg")}
-                    />
-                  )}
-                />
-                <Text style={{ textAlign: "justify" }}>
-                  Respuesta: {isLoading && "Cargando..."}
-                </Text>
-                <Text style={{ textAlign: "justify" }}>
-                  {isEmptyResponse
-                    ? "La respuesta está vacía."
-                    : predictionData.answer}
-                </Text>
-              </Card.Content>
-            </Card>
-          ) : (
-            <Text style={{ textAlign: "justify" }}></Text>
-          )}
+                {/* RESPUESTA DEL CHATBOT */}
+                {conversation.predictionData !== "" && (
+                  <Card style={styles.card}>
+                    <Card.Content>
+                      <Card.Title
+                        subtitle={
+                          <Text
+                            style={{ textAlign: "right", fontWeight: "bold" }}
+                          >
+                            ChatBot
+                          </Text>
+                        }
+                        right={(props) => (
+                          <Avatar.Image
+                            size={44}
+                            source={require("../../../assets/img/chatbot/bot.jpg")}
+                          />
+                        )}
+                      />
+                      <Text style={{ textAlign: "justify" }}>
+                        Respuesta: {conversation.isLoading && "Cargando..."}
+                      </Text>
+                      <Text style={{ textAlign: "justify" }}>
+                        {conversation.isEmptyResponse
+                          ? "La respuesta está vacía."
+                          : conversation.predictionData.answer}
+                      </Text>
+                    </Card.Content>
+                  </Card>
+                )}
+              </React.Fragment>
+            ))}
         </View>
       ) : (
         <View>
