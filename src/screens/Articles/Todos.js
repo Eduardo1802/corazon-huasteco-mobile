@@ -13,7 +13,7 @@ import {
 } from "react-native-paper";
 import { app } from "../../config/firebase";
 import { useAuth } from "../../context/AuthContext";
-import AwesomeAlert from 'react-native-awesome-alerts';
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const Todos = ({ navigation }) => {
   const { user } = useAuth();
@@ -29,8 +29,28 @@ const Todos = ({ navigation }) => {
   const [tradicciones, setTradicciones] = useState(false);
   const [temas, setTemas] = useState([]);
   // Buscador
-  const [searchQuery, setSearchQuery] = useState("");
-  const onChangeSearch = (query) => setSearchQuery(query);
+  const [tematicas, setTematicas] = useState([]);
+  const [tablaProyectos, setTablaProyectos] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
+
+  const onChangeSearch = (query) => {
+    setBusqueda(query);
+    filtrar(query);
+  };
+
+  const filtrar = (terminoBusqueda) => {
+    var resultadoBusqueda = tablaProyectos.filter((elemento) => {
+      // Verificar si el término de búsqueda está presente en la propiedad "titulo"
+      if (
+        elemento.titulo.toLowerCase().includes(terminoBusqueda.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    setTematicas(resultadoBusqueda);
+  };
 
   const selectTematicas = () => {
     const tematicasSeleccionadas = [];
@@ -54,7 +74,6 @@ const Todos = ({ navigation }) => {
   };
 
   // RecuperarDatosLocalmente
-  const [tematicas, setTematicas] = useState([]);
   const recuperarDatosLocalmente = async () => {
     try {
       const datos = await AsyncStorage.getItem("datosLocal");
@@ -62,6 +81,7 @@ const Todos = ({ navigation }) => {
         const datosParseados = JSON.parse(datos);
         const datosTabla = datosParseados.tematicas;
         setTematicas(datosTabla);
+        setTablaProyectos(datosTabla);
         console.log("Temáticas sección todos obtenidas del Storage.");
       } else {
         const tematicasSnapshot = await app
@@ -70,6 +90,7 @@ const Todos = ({ navigation }) => {
           .get();
         const tematicasData = tematicasSnapshot.docs.map((doc) => doc.data());
         setTematicas(tematicasData);
+        setTablaProyectos(tematicasData);
         console.log("Temáticas sección todos obtenidas de firebase.");
       }
     } catch (error) {
@@ -87,30 +108,33 @@ const Todos = ({ navigation }) => {
   const showAlertSuccess = (message) => {
     setAlert({
       showAlert: true,
-      alertTitle: 'Éxito',
+      alertTitle: "Éxito",
       alertMessage: message,
-      alertType: 'success',
+      alertType: "success",
     });
   };
 
   const showAlertError = (message) => {
     setAlert({
       showAlert: true,
-      alertTitle: 'Error',
+      alertTitle: "Error",
       alertMessage: message,
-      alertType: 'error',
+      alertType: "error",
     });
   };
-  
+
   const [selectedItem, setSelectedItem] = useState(null);
   const guardarArticulos = async (item) => {
     if (user) {
       setSelectedItem(item);
       const docList = await app.firestore().collection("guardados").get();
       const datos = docList.docs
-        .filter((doc) => doc.data().email === user.email && doc.data().titulo === item.titulo)
-        .map((doc) => doc.data())
-      if(datos.length === 0){
+        .filter(
+          (doc) =>
+            doc.data().email === user.email && doc.data().titulo === item.titulo
+        )
+        .map((doc) => doc.data());
+      if (datos.length === 0) {
         if (item.fecha === undefined) {
           const coleccionRef = app.firestore().collection("guardados");
           await coleccionRef.doc(`${new Date().getTime()}`).set({
@@ -133,12 +157,14 @@ const Todos = ({ navigation }) => {
           });
         }
         // alert(`La temática: ${item.titulo} se ha guardado con éxito.`);
-        showAlertSuccess(`La temática: ${item.titulo} se ha guardado con éxito.`)
-      }else{
+        showAlertSuccess(
+          `La temática: ${item.titulo} se ha guardado con éxito.`
+        );
+      } else {
         // alert(`La temática: ${item.titulo} ya ha sido guardada.`);
         showAlertError(`La temática: ${item.titulo} ya ha sido guardada.`);
       }
-    }else{
+    } else {
       // alert("Para poder guardar un artículo debes iniciar sesión");
       showAlertError("Para poder guardar un artículo debes iniciar sesión");
     }
@@ -150,27 +176,27 @@ const Todos = ({ navigation }) => {
 
   const alertStyles = {
     container: {
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
     },
     titleText: {
       fontSize: 20,
-      fontWeight: 'bold',
-      color: '#531949',
+      fontWeight: "bold",
+      color: "#531949",
     },
     messageText: {
       fontSize: 16,
-      color: '#333',
+      color: "#333",
     },
     buttonContainer: {
       marginTop: 10,
     },
     button: {
-      backgroundColor: '#531949',
+      backgroundColor: "#531949",
       borderRadius: 5,
       paddingVertical: 10,
     },
     buttonText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: 16,
     },
   };
@@ -203,7 +229,7 @@ const Todos = ({ navigation }) => {
           <Searchbar
             placeholder="Buscar..."
             onChangeText={onChangeSearch}
-            value={searchQuery}
+            value={busqueda}
             style={styles.searchbar}
           />
         </View>

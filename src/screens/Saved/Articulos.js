@@ -8,19 +8,37 @@ import AwesomeAlert from "react-native-awesome-alerts";
 const Articulos = ({ navigation }) => {
   const { user } = useAuth();
   // Buscador
-  const [searchQuery, setSearchQuery] = useState("");
-  const onChangeSearch = (query) => setSearchQuery(query);
-
   const [articulos, setArticulos] = useState([]);
+  const [tablaProyectos, setTablaProyectos] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
 
-  const obtenerInfo = async () => {
-    const docList = await app.firestore().collection("guardados").get();
-    const datos = docList.docs
-      .filter((doc) => doc.data().email === user.email)
-      .map((doc) => doc.data());
-
-    setArticulos(datos);
+  const onChangeSearch = (query) => {
+    setBusqueda(query);
+    filtrar(query);
   };
+
+  const filtrar = (terminoBusqueda) => {
+    var resultadoBusqueda = tablaProyectos.filter((elemento) => {
+      // Verificar si el término de búsqueda está presente en la propiedad "titulo"
+      if (
+        elemento.titulo.toLowerCase().includes(terminoBusqueda.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
+    setArticulos(resultadoBusqueda);
+  };
+
+  // const obtenerInfo = async () => {
+  //   const docList = await app.firestore().collection("guardados").get();
+  //   const datos = docList.docs
+  //     .filter((doc) => doc.data().email === user.email)
+  //     .map((doc) => doc.data());
+
+  //   setArticulos(datos);
+  //   setTablaProyectos(datos);
+  // };
 
   const [alert, setAlert] = useState({
     showAlert: false,
@@ -82,8 +100,8 @@ const Articulos = ({ navigation }) => {
       .onSnapshot((querySnapshot) => {
         const nuevosArticulos = querySnapshot.docs.map((doc) => doc.data());
         setArticulos(nuevosArticulos);
+        setTablaProyectos(nuevosArticulos);
       });
-
     return () => {
       unsubscribe();
     };
@@ -139,77 +157,79 @@ const Articulos = ({ navigation }) => {
         confirmButtonStyle={alertStyles.button}
         confirmButtonTextStyle={alertStyles.buttonText}
       />
-      {articulos.length === 0 ? (
-        <View
-          style={{
-            flex: 1,
-            padding: 20,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ textAlign: "center" }}>
-            No tienes ningún artículo guardado.
-          </Text>
-          <Card.Content>
-            <Button
-              icon="book-open-outline"
-              onPress={() => navigation.navigate("RecientesHome")}
-              style={styles.button2}
+      <ScrollView>
+        <View style={styles.container}>
+          <Card>
+            <Card.Content>
+              <Searchbar
+                placeholder="Buscar..."
+                onChangeText={onChangeSearch}
+                value={busqueda}
+              />
+            </Card.Content>
+          </Card>
+          {articulos.length === 0 && (
+            <Card style={{marginTop: 20}}>
+            <View
+              style={{
+              //   flex: 1,
+                padding: 10,
+              //   justifyContent: "center",
+              //   alignItems: "center",
+              }}
             >
-              Ver artículos
-            </Button>
-          </Card.Content>
-        </View>
-      ) : (
-        <ScrollView>
-          <View style={styles.container}>
-            <Card>
+              <Text style={{ textAlign: "center", margin: 10, }}>
+                No tienes ningún artículo guardado.
+              </Text>
               <Card.Content>
-                <Searchbar
-                  placeholder="Buscar..."
-                  onChangeText={onChangeSearch}
-                  value={searchQuery}
+                <Button
+                  icon="book-open-outline"
+                  onPress={() => navigation.navigate("RecientesHome")}
+                  style={styles.button2}
+                >
+                  Ver artículos
+                </Button>
+              </Card.Content>
+            </View>
+              </Card>
+          )}
+
+          {articulos.map((articulo, index) => (
+            <Card style={styles.card} key={index}>
+              <Card.Content>
+                <Card.Cover
+                  source={{
+                    uri: articulo.imgPortada,
+                  }}
                 />
+                <Text variant="titleLarge" style={styles.text}>
+                  {articulo.titulo}
+                </Text>
+                <Text variant="bodySmall" style={styles.text}>
+                  {articulo.tematica}
+                </Text>
+                <Button
+                  icon="text-box"
+                  mode="contained"
+                  style={styles.button}
+                  onPress={() =>
+                    navigation.navigate("ArtGuardados", { item: articulo })
+                  }
+                >
+                  Leer artículo
+                </Button>
+                <Button
+                  icon="delete-forever-outline"
+                  onPress={() => eliminarArticulos(articulo)}
+                  style={styles.button3}
+                >
+                  Eliminar de Guardados
+                </Button>
               </Card.Content>
             </Card>
-            {articulos.map((articulo, index) => (
-              <Card style={styles.card} key={index}>
-                <Card.Content>
-                  <Card.Cover
-                    source={{
-                      uri: articulo.imgPortada,
-                    }}
-                  />
-                  <Text variant="titleLarge" style={styles.text}>
-                    {articulo.titulo}
-                  </Text>
-                  <Text variant="bodySmall" style={styles.text}>
-                    {articulo.tematica}
-                  </Text>
-                  <Button
-                    icon="text-box"
-                    mode="contained"
-                    style={styles.button}
-                    onPress={() =>
-                      navigation.navigate("ArtGuardados", { item: articulo })
-                    }
-                  >
-                    Leer artículo
-                  </Button>
-                  <Button
-                    icon="delete-forever-outline"
-                    onPress={() => eliminarArticulos(articulo)}
-                    style={styles.button3}
-                  >
-                    Eliminar de Guardados
-                  </Button>
-                </Card.Content>
-              </Card>
-            ))}
-          </View>
-        </ScrollView>
-      )}
+          ))}
+        </View>
+      </ScrollView>
     </>
   );
 };

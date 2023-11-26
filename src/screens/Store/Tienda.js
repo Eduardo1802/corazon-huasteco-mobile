@@ -16,8 +16,36 @@ import { useAuth } from "../../context/AuthContext";
 import { db } from "../../config/firebaseDB";
 import { Alert } from "react-native";
 import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import AwesomeAlert from "react-native-awesome-alerts";
+
 const Tienda = ({ navigation }) => {
   const { user } = useAuth();
+
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (title, message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: title,
+      alertMessage: message,
+      alertType: "success",
+    });
+  };
+
+  const showAlertError = (title, message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: title,
+      alertMessage: message,
+      alertType: "error",
+    });
+  };
+
   //Añadir
   const registrarProducto = async (idProduct) => {
     console.log("Button clicked with product ID:", idProduct);
@@ -38,7 +66,7 @@ const Tienda = ({ navigation }) => {
         // Si el producto ya existe en el carrito, aumentar la cantidad
         if (data.hasOwnProperty(idProduct)) {
           if (data[idProduct] >= 5) {
-            Alert.alert(
+            showAlertError(
               "A ocurrido un error",
               `No se puede agregar 5 veces el mismo producto`
             );
@@ -60,7 +88,7 @@ const Tienda = ({ navigation }) => {
       const docSnap2 = await getDoc(referencia2);
       const data2 = docSnap2.exists() ? docSnap2.data() : null;
       // Mostrar una alerta
-      Alert.alert(
+      showAlertSuccess(
         "Producto añadido al carrito",
         `El producto ${data2.nombre} se ha añadido correctamente al carrito.`
       );
@@ -69,8 +97,31 @@ const Tienda = ({ navigation }) => {
     }
   };
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const onChangeSearch = (query) => setSearchQuery(query);
+  // Buscador
+  const [productos, setProductos] = useState([]);
+  const [tablaProyectos, setTablaProyectos] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
+
+  const onChangeSearch = (query) => {
+    setBusqueda(query);
+    filtrar(query);
+  };
+
+  const filtrar = (terminoBusqueda) => {
+    var resultadoBusqueda = tablaProyectos.filter((elemento) => {
+      // Verificar si el término de búsqueda está presente en la propiedad "titulo"
+      if (
+        elemento.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase())
+      ) {
+        return true;
+      }
+      return false;
+    });
+
+    setProductos(resultadoBusqueda);
+  };
+
+
   // Ventana emergente filtros
   const [visibleFiltros, setVisibleFiltros] = useState(false);
   const closefiltros = () => setVisibleFiltros(false);
@@ -84,9 +135,6 @@ const Tienda = ({ navigation }) => {
   const [blanco, setBlanco] = useState(false);
   const [azul, setAzul] = useState(false);
 
-  // recuperarDatosLocalmente
-  const [productos, setProductos] = useState([]);
-
   const recuperarDatosLocalmente = async () => {
     try {
       const datos = await AsyncStorage.getItem("datosLocal");
@@ -95,6 +143,7 @@ const Tienda = ({ navigation }) => {
         const datosTabla = datosParseados.producto;
         // console.log(datosTabla)
         setProductos(datosTabla);
+        setTablaProyectos(datosTabla);
         console.log("Productos obtenidos del Storage.");
       } else {
         const productoSnapshot = await app
@@ -103,6 +152,7 @@ const Tienda = ({ navigation }) => {
           .get();
         const productoData = productoSnapshot.docs.map((doc) => doc.data());
         setProductos(productoData);
+        setTablaProyectos(productoData);
         console.log("Productos obtenidos de firebase.");
       }
     } catch (error) {
@@ -114,17 +164,67 @@ const Tienda = ({ navigation }) => {
     recuperarDatosLocalmente();
   }, []);
 
+
+  const alertStyles = {
+    container: {
+      backgroundColor: "#fff",
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: "bold",
+      color: "#531949",
+      textAlign: "center",
+    },
+    messageText: {
+      fontSize: 16,
+      color: "#333",
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: "#531949",
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: "#fff",
+      fontSize: 16,
+    },
+  };
+
   return (
     <ScrollView>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       <View style={styles.container}>
         {/* BUSCAR Y CARRITO */}
         <Card>
           <View style={styles.searchBarContainer}>
             <Searchbar
-              placeholder="Buscar..."
-              onChangeText={onChangeSearch}
-              value={searchQuery}
-              style={styles.searchbar}
+            placeholder="Buscar..."
+            onChangeText={onChangeSearch}
+            value={busqueda}
+            style={styles.searchbar}
             />
           </View>
           <Button

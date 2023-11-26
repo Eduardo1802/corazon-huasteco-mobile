@@ -37,6 +37,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import { createToken } from "@stripe/stripe-react-native";
 import creatPaymentIntent from "../../apis/stripeApis";
 import ButtonComp from "../../components/customs/ButtonComp";
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 const Carrito = () => {
   const { user } = useAuth();
@@ -180,6 +181,23 @@ const Carrito = () => {
       setCardInfo(null);
     }
   };
+
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: 'Éxito',
+      alertMessage: message,
+      alertType: 'success',
+    });
+  };
+
   const onDone = async () => {
     let apiData = {
       amount: total * 100,
@@ -197,7 +215,7 @@ const Carrito = () => {
           { paymentMethodType: "Card" }
         );
         console.log("confirmPaymentIntent res++++", confirmPaymentIntent);
-        alert("Pago realizado exitosamente...!!!");
+        showAlertSuccess("Pago realizado exitosamente...!!!");
         closeCarrito();
         registrarVentas();
         setEtapa(0);
@@ -244,8 +262,56 @@ const Carrito = () => {
     setTotal(nuevoTotal.toFixed(2));
   }, [carritoData, productosData]); // Este efecto se ejecutará cuando cambien carritoData o productosData
 
+  const alertStyles = {
+    container: {
+      backgroundColor: '#fff',
+    },
+    titleText: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#531949',
+    },
+    messageText: {
+      fontSize: 16,
+      color: '#333',
+    },
+    buttonContainer: {
+      marginTop: 10,
+    },
+    button: {
+      backgroundColor: '#531949',
+      borderRadius: 5,
+      paddingVertical: 10,
+    },
+    buttonText: {
+      color: '#fff',
+      fontSize: 16,
+    },
+  };
+
   return (
     <View style={styles.container}>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       <View style={styles.buttonContainer}>
         <IconButton
           icon="cart"
