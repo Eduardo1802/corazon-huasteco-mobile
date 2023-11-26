@@ -186,27 +186,47 @@ const Carrito = () => {
       currency: "mxn",
       description: `ID cliente ${user.uid}`,
     };
-
+  
     try {
       const res = await creatPaymentIntent(apiData);
-      console.log("El pago se a echo correctamente", res);
-
+      console.log("El pago se ha realizado correctamente", res);
+  
       if (res?.data?.paymentIntent) {
         let confirmPaymentIntent = await confirmPayment(
           res?.data?.paymentIntent,
           { paymentMethodType: "Card" }
         );
         console.log("confirmPaymentIntent res++++", confirmPaymentIntent);
-        alert("Payment succesfully...!!!");
+        alert("Pago realizado exitosamente...!!!");
         closeCarrito();
         registrarVentas();
         setEtapa(0);
       }
     } catch (error) {
-      console.log("Error rasied during payment intent", error);
+      console.error("Error raised during payment intent:", error);
+  
+      if (error?.response?.data?.error) {
+        console.error("Stripe error code:", error.response.data.error.code);
+        console.error("Stripe error message:", error.response.data.error.message);
+      }
+  
+      // Manejar diferentes casos de error
+      if (error.code === "payment_intent_authentication_failure") {
+        // El pago requiere autenticación y la autenticación ha fallado
+        console.error("Payment authentication failed:", error);
+      } else if (error.code === "stripe_error_code") {
+        // Otro tipo de error específico de Stripe
+        console.error("Stripe error code:", error);
+      } else {
+        // Manejar otros errores
+        console.error("Unexpected error:", error);
+      }
+  
+      // Puedes mostrar un mensaje de error al usuario si es necesario
+      setErrorPago("Error en el proceso de pago. Por favor, inténtalo de nuevo.");
     }
   };
-
+  
   useEffect(() => {
     obtenerDatosCarritoYSumar();
   }, [user]);
