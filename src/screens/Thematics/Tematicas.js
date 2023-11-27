@@ -202,6 +202,10 @@ const Tematicas = () => {
     },
   };
 
+  const [info, setInfo] = useState(item.informacion.split('.'));
+  const [index, setIndex] = useState(0);
+  const [shownInfo, setShownInfo] = useState([]);
+  
   return (
     <ScrollView>
       <AwesomeAlert
@@ -261,9 +265,24 @@ const Tematicas = () => {
               }}
             /> */}
             <Text variant="bodyMedium" style={styles.content}>
-              {item.informacion}
+              {info[index]}
             </Text>
+
           </Card.Content>
+            <Card.Actions>
+              {index > 0 && (
+                <Button onPress={() => setIndex(index - 1)}>
+                  Párrafo anterior
+                </Button>
+              )}
+
+              {index < info.length - 1 && (
+                <Button onPress={() => setIndex(index + 1)}>
+                  Siguiente párrafo
+                </Button>
+              )}
+
+            </Card.Actions>
         </Card>
 
         {/* FORMULARIO COMENTARIO */}
