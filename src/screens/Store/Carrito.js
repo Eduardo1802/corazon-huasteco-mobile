@@ -37,7 +37,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 import { createToken } from "@stripe/stripe-react-native";
 import creatPaymentIntent from "../../apis/stripeApis";
 import ButtonComp from "../../components/customs/ButtonComp";
-import AwesomeAlert from 'react-native-awesome-alerts';
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const Carrito = () => {
   const { user } = useAuth();
@@ -192,9 +192,9 @@ const Carrito = () => {
   const showAlertSuccess = (message) => {
     setAlert({
       showAlert: true,
-      alertTitle: 'Éxito',
+      alertTitle: "Éxito",
       alertMessage: message,
-      alertType: 'success',
+      alertType: "success",
     });
   };
 
@@ -204,11 +204,11 @@ const Carrito = () => {
       currency: "mxn",
       description: `ID cliente ${user.uid}`,
     };
-  
+
     try {
       const res = await creatPaymentIntent(apiData);
       console.log("El pago se ha realizado correctamente", res);
-  
+
       if (res?.data?.paymentIntent) {
         let confirmPaymentIntent = await confirmPayment(
           res?.data?.paymentIntent,
@@ -222,12 +222,15 @@ const Carrito = () => {
       }
     } catch (error) {
       console.error("Error raised during payment intent:", error);
-  
+
       if (error?.response?.data?.error) {
         console.error("Stripe error code:", error.response.data.error.code);
-        console.error("Stripe error message:", error.response.data.error.message);
+        console.error(
+          "Stripe error message:",
+          error.response.data.error.message
+        );
       }
-  
+
       // Manejar diferentes casos de error
       if (error.code === "payment_intent_authentication_failure") {
         // El pago requiere autenticación y la autenticación ha fallado
@@ -239,12 +242,14 @@ const Carrito = () => {
         // Manejar otros errores
         console.error("Unexpected error:", error);
       }
-  
+
       // Puedes mostrar un mensaje de error al usuario si es necesario
-      setErrorPago("Error en el proceso de pago. Por favor, inténtalo de nuevo.");
+      setErrorPago(
+        "Error en el proceso de pago. Por favor, inténtalo de nuevo."
+      );
     }
   };
-  
+
   useEffect(() => {
     obtenerDatosCarritoYSumar();
   }, [user]);
@@ -264,27 +269,27 @@ const Carrito = () => {
 
   const alertStyles = {
     container: {
-      backgroundColor: '#fff',
+      backgroundColor: "#fff",
     },
     titleText: {
       fontSize: 20,
-      fontWeight: 'bold',
-      color: '#531949',
+      fontWeight: "bold",
+      color: "#531949",
     },
     messageText: {
       fontSize: 16,
-      color: '#333',
+      color: "#333",
     },
     buttonContainer: {
       marginTop: 10,
     },
     button: {
-      backgroundColor: '#531949',
+      backgroundColor: "#531949",
       borderRadius: 5,
       paddingVertical: 10,
     },
     buttonText: {
-      color: '#fff',
+      color: "#fff",
       fontSize: 16,
     },
   };
@@ -412,15 +417,10 @@ const Carrito = () => {
               <View style={styles.formContainer}>
                 {/* Nombre del Propietario */}
 
-                <TextInput
-                  icon="google"
-                  label="Nombre del Propietario"
-                  value={nombre}
-                  onChangeText={(text) => setNombre(text)}
-                  style={styles.input}
-                />
-                <Text>Total a pagar {total}</Text>
-                <Text>Introduce la informacion de tu tarjeta</Text>
+                
+                <Text style={styles.cardInfoText}>
+                  Introduce la información de tu tarjeta
+                </Text>
                 <StripeProvider
                   publishableKey={SP_KEYP}
                   merchantIdentifier="merchant.identifier" // required for Apple Pay
@@ -432,13 +432,13 @@ const Carrito = () => {
                       number: "4242 4242 4242 4242",
                     }}
                     cardStyle={{
-                      backgroundColor: "#FFFFFF",
-                      textColor: "#000000",
+                      backgroundColor:"#f2e2ed",
+                      textColor: "#531949",
                     }}
                     style={{
                       width: "100%",
                       height: 50,
-                      marginVertical: 30,
+                      marginVertical: 10,
                     }}
                     onCardChange={(cardDetails) => {
                       fetchCardDetail(cardDetails);
@@ -448,6 +448,7 @@ const Carrito = () => {
                     }}
                   />
                 </StripeProvider>
+                <Text>Total a pagar: ${total}</Text>
               </View>
             )}
           </Dialog.Content>
@@ -507,6 +508,11 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 10,
+  },
+  cardInfoText: {
+    textAlign: "center", // Centra el texto
+    fontSize: 18, // Ajusta el tamaño del texto
+    marginVertical: 10, // Espaciado vertical
   },
 });
 
