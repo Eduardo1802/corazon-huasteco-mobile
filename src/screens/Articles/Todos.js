@@ -24,7 +24,7 @@ const Todos = ({ navigation }) => {
   // Selección de Temáticas
   const [vestimenta, setVestimenta] = useState(false);
   const [danza, setDanza] = useState(false);
-  const [grastonomia, setGrastonomia] = useState(false);
+  const [gastronomia, setGastronomia] = useState(false);
   const [musica, setMusica] = useState(false);
   const [tradicciones, setTradicciones] = useState(false);
   const [temas, setTemas] = useState([]);
@@ -53,25 +53,29 @@ const Todos = ({ navigation }) => {
   };
 
   const selectTematicas = () => {
-    const tematicasSeleccionadas = [];
-    if (vestimenta) {
-      tematicasSeleccionadas.push("Vestimenta");
+    let resultadoBusqueda = tablaProyectos;
+    if (vestimenta || danza || gastronomia || musica || tradicciones ){
+      resultadoBusqueda = resultadoBusqueda.filter(info => {
+        if (vestimenta && info.tematica === 'Vestimenta') return true;
+        if (danza && info.tematica === 'Danza') return true;
+        if (gastronomia && info.tematica === 'Gastronomia') return true;
+        if (musica && info.tematica === 'Musica') return true;
+        if (tradicciones && info.tematica === 'Tradiciones') return true;
+        return false;
+      });
     }
-    if (danza) {
-      tematicasSeleccionadas.push("Danza");
-    }
-    if (grastonomia) {
-      tematicasSeleccionadas.push("Gastronomía");
-    }
-    if (musica) {
-      tematicasSeleccionadas.push("Música");
-    }
-    if (tradicciones) {
-      tematicasSeleccionadas.push("Tradicciones");
-    }
-    setTemas(tematicasSeleccionadas);
-    setVisible(false);
+    setTematicas(resultadoBusqueda);
+    close();
   };
+
+  const clearFilters = () => {
+    setVestimenta(false);
+    setDanza(false);
+    setGastronomia(false);
+    setMusica(false);
+    setTradicciones(false);
+    showAlertSuccess("Se han limpiado los filtros");
+  }
 
   // RecuperarDatosLocalmente
   const recuperarDatosLocalmente = async () => {
@@ -290,9 +294,9 @@ const Todos = ({ navigation }) => {
               )}
               right={(props) => (
                 <Checkbox
-                  status={grastonomia ? "checked" : "unchecked"}
+                  status={gastronomia ? "checked" : "unchecked"}
                   onPress={() => {
-                    setGrastonomia(!grastonomia);
+                    setGastronomia(!gastronomia);
                   }}
                 />
               )}
@@ -312,7 +316,7 @@ const Todos = ({ navigation }) => {
               )}
             />
             <Card.Title
-              title="Tradicciones"
+              title="Tradiciones"
               left={(props) => <Avatar.Icon {...props} size={44} icon="flag" />}
               right={(props) => (
                 <Checkbox
@@ -326,6 +330,7 @@ const Todos = ({ navigation }) => {
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={close}>Cancelar</Button>
+            <Button onPress={clearFilters}>Limpiar</Button>
             <Button onPress={selectTematicas}>Filtrar</Button>
           </Dialog.Actions>
         </Dialog>
