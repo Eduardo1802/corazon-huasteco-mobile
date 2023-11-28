@@ -204,8 +204,7 @@ const Tematicas = () => {
 
   const [info, setInfo] = useState(item.informacion.split('.'));
   const [index, setIndex] = useState(0);
-  const [shownInfo, setShownInfo] = useState([]);
-  
+
   return (
     <ScrollView>
       <AwesomeAlert
@@ -264,25 +263,21 @@ const Tematicas = () => {
                 uri: item.imagen,
               }}
             /> */}
-            <Text variant="bodyMedium" style={styles.content}>
+            {/* <Text variant="bodyMedium" style={styles.content}>
               {info[index]}
+            </Text> */}
+            <Text variant='bodyMedium' style={styles.content}>
+              {info.slice(0, index + 1).join('.')}
             </Text>
 
+          <Card.Actions>
+            {index < info.length - 1 && (
+              <Button onPress={() => setIndex(index + 1)}>
+                Mostrar siguiente párrafo
+              </Button>
+            )}
+          </Card.Actions>
           </Card.Content>
-            <Card.Actions>
-              {index > 0 && (
-                <Button onPress={() => setIndex(index - 1)}>
-                  Párrafo anterior
-                </Button>
-              )}
-
-              {index < info.length - 1 && (
-                <Button onPress={() => setIndex(index + 1)}>
-                  Siguiente párrafo
-                </Button>
-              )}
-
-            </Card.Actions>
         </Card>
 
         {/* FORMULARIO COMENTARIO */}
