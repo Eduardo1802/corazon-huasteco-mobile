@@ -4,12 +4,42 @@ import { StyleSheet, View, ScrollView, Image, Dimensions } from "react-native";
 import { Button, Text, Card, Divider, Avatar } from "react-native-paper";
 
 const windowWidth = Dimensions.get("window").width;
+import { app } from "../../config/firebase";
+import { useAuth } from "../../context/AuthContext";
+import { db } from "../../config/firebaseDB";
+import { Alert } from "react-native";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const Producto = () => {
+  const { user } = useAuth();
   const route = useRoute();
   const { item } = route.params;
   const scrollViewRef = useRef();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [alert, setAlert] = useState({
+    showAlert: false,
+    alertTitle: "",
+    alertMessage: "",
+    alertType: "",
+  });
+
+  const showAlertSuccess = (title, message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: title,
+      alertMessage: message,
+      alertType: "success",
+    });
+  };
+  const showAlertError = (title, message) => {
+    setAlert({
+      showAlert: true,
+      alertTitle: title,
+      alertMessage: message,
+      alertType: "error",
+    });
+  };
 
   const handleScroll = (event) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -26,6 +56,56 @@ const Producto = () => {
       </View>
     ));
   };
+//Añadir
+const registrarProducto = async (idProduct) => {
+  console.log("Button clicked with product ID:", idProduct);
+
+  // Verificar si user está definido y tiene la propiedad uid
+  if (user && user.uid) {
+    // Obtener la referencia del documento del carrito del usuario
+    const referencia = doc(db, `carritoUsuario/${user.uid}`);
+
+    // Obtener los datos del carrito del usuario
+    const docSnap = await getDoc(referencia);
+    const data = docSnap.exists() ? docSnap.data() : null;
+
+    // Si el carrito no existe, crearlo con el producto y cantidad 1
+    if (!data) {
+      await setDoc(referencia, { [idProduct]: 1, total: 1 });
+    } else {
+      // Si el producto ya existe en el carrito, aumentar la cantidad
+      if (data.hasOwnProperty(idProduct)) {
+        if (data[idProduct] >= 5) {
+          showAlertError(
+            "A ocurrido un error",
+            `No se puede agregar 5 veces el mismo producto`
+          );
+          return;
+        }
+        await updateDoc(referencia, {
+          [idProduct]: data[idProduct] + 1,
+          total: data.total ? data.total + 1 : 1,
+        });
+      } else {
+        // Si el producto no existe en el carrito, agregarlo con cantidad 1
+        await updateDoc(referencia, {
+          [idProduct]: 1,
+          total: data.total ? data.total + 1 : 1,
+        });
+      }
+    }
+    const referencia2 = doc(db, `producto/${idProduct}`);
+    const docSnap2 = await getDoc(referencia2);
+    const data2 = docSnap2.exists() ? docSnap2.data() : null;
+    // Mostrar una alerta
+    showAlertSuccess(
+      "Producto añadido al carrito",
+      `El producto ${data2.nombre} se ha añadido correctamente al carrito.`
+    );
+  } else {
+    console.error("El usuario no está autenticado o no tiene un UID.");
+  }
+};
 
   return (
     <ScrollView>
@@ -74,18 +154,12 @@ const Producto = () => {
             <Divider style={{ margin: 5 }} />
             <Card.Content style={styles.cardContent}>
               <View style={{ flexDirection: "row" }}>
-                <Button
-                  icon="currency-usd"
-                  mode="contained"
-                  contentStyle={{ flexDirection: "row-reverse" }}
-                  style={styles.button}
-                >
-                  Comprar
-                </Button>
+               
                 <Button
                   icon="cart"
                   contentStyle={{ flexDirection: "row-reverse" }}
                   style={styles.button}
+                  onPress={() => registrarProducto(item.id)}
                 >
                   Añadir
                 </Button>
