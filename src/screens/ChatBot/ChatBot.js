@@ -94,33 +94,6 @@ const ChatBot = ({ navigation }) => {
             .reverse()
             .map((conversation, index) => (
               <React.Fragment key={index}>
-                {/* PREGUNTA DEL USUARIO */}
-                {conversation.user_query !== "" && (
-                  <Card style={styles.card}>
-                    <Card.Content>
-                      <Card.Title
-                        title={
-                          <Text style={{ fontWeight: "bold" }}>
-                            {user.email}
-                          </Text>
-                        }
-                        left={(props) => (
-                          <Avatar.Image
-                            size={44}
-                            source={require("../../../assets/img/chatbot/perfil.png")}
-                          />
-                        )}
-                      />
-                      <Text style={{ textAlign: "justify" }}>
-                        Pregunta: {conversation.user_query}
-                      </Text>
-                      <Text style={{ textAlign: "justify" }}>
-                        {conversation.isLoading && "Cargando..."}
-                      </Text>
-                    </Card.Content>
-                  </Card>
-                )}
-
                 {/* RESPUESTA DEL CHATBOT */}
                 {conversation.predictionData !== "" && (
                   <Card style={styles.card}>
@@ -147,6 +120,33 @@ const ChatBot = ({ navigation }) => {
                         {conversation.isEmptyResponse
                           ? "La respuesta está vacía."
                           : conversation.predictionData.answer}
+                      </Text>
+                    </Card.Content>
+                  </Card>
+                )}
+                
+                {/* PREGUNTA DEL USUARIO */}
+                {conversation.user_query !== "" && (
+                  <Card style={styles.card}>
+                    <Card.Content>
+                      <Card.Title
+                        title={
+                          <Text style={{ fontWeight: "bold" }}>
+                            {user.email}
+                          </Text>
+                        }
+                        left={(props) => (
+                          <Avatar.Image
+                            size={44}
+                            source={require("../../../assets/img/chatbot/perfil.png")}
+                          />
+                        )}
+                      />
+                      <Text style={{ textAlign: "justify" }}>
+                        Pregunta: {conversation.user_query}
+                      </Text>
+                      <Text style={{ textAlign: "justify" }}>
+                        {conversation.isLoading && "Cargando..."}
                       </Text>
                     </Card.Content>
                   </Card>
