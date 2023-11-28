@@ -130,6 +130,7 @@ const Carrito = () => {
           // Create a sale record for each product
           await addDoc(ventaRef, {
             usuario: user.uid,
+            url: productoData.url,
             nombreProducto: productoData.nombre,
             cantidadProducto: cantidad,
             costo: productoData.costo,
