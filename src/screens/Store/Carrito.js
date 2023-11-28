@@ -331,6 +331,7 @@ const Carrito = () => {
       {/* DAR CLICK EN EL CARRITO */}
       <Portal>
         <Dialog visible={visibleCarrito} onDismiss={closeCarrito}>
+          <ScrollView>
           <Dialog.Title style={styles.title}>Carrito de compras</Dialog.Title>
           <Dialog.Content>
             {etapa === 0 ? (
@@ -451,7 +452,8 @@ const Carrito = () => {
                 <Text>Total a pagar: ${total}</Text>
               </View>
             )}
-          </Dialog.Content>
+          </Dialog.Content>          
+          </ScrollView>
           <Dialog.Actions>
             {/* Botón de Cancelar */}
             <Button onPress={closeCarrito}>Cancelar</Button>

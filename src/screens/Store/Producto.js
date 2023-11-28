@@ -107,8 +107,56 @@ const registrarProducto = async (idProduct) => {
   }
 };
 
+const alertStyles = {
+  container: {
+    backgroundColor: "#fff",
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#531949",
+  },
+  messageText: {
+    fontSize: 16,
+    color: "#333",
+  },
+  buttonContainer: {
+    marginTop: 10,
+  },
+  button: {
+    backgroundColor: "#531949",
+    borderRadius: 5,
+    paddingVertical: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+};
+
   return (
     <ScrollView>
+      <AwesomeAlert
+        show={alert.showAlert}
+        showProgress={false}
+        title={alert.alertTitle}
+        message={alert.alertMessage}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={false}
+        showConfirmButton={true}
+        confirmText="Aceptar"
+        confirmButtonColor="#531949"
+        onConfirmPressed={() => {
+          setAlert({ showAlert: false });
+        }}
+        contentContainerStyle={alertStyles.container}
+        titleStyle={alertStyles.titleText}
+        messageStyle={alertStyles.messageText}
+        buttonContainerStyle={alertStyles.buttonContainer}
+        confirmButtonStyle={alertStyles.button}
+        confirmButtonTextStyle={alertStyles.buttonText}
+      />
       <View style={styles.container}>
         {/* CARRUSEL */}
         <ScrollView

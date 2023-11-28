@@ -8,19 +8,19 @@ import {
   IconButton,
   TouchableRipple,
 } from "react-native-paper";
-import { useAuth } from "../../context/AuthContext"
+import { useAuth } from "../../context/AuthContext";
 import { app } from "../../config/firebase";
 
 const Usuario = ({ navigation, user }) => {
-  const { logout } = useAuth(); 
-  const handleLogout = async() => {
-    try{
+  const { logout } = useAuth();
+  const handleLogout = async () => {
+    try {
       await logout();
       navigation.navigate("InicioHome");
-    }catch(error){
+    } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   const [datos, setDatos] = useState([]);
 
@@ -53,44 +53,15 @@ const Usuario = ({ navigation, user }) => {
                 Consultador
               </Button>
               <Text variant="titleLarge">Hola, Bienvenido</Text>
-              <Text variant="titleMedium">{datos.length > 0 ? datos[0].name : 'Nombre no disponible'}</Text>
-              <Button icon="pencil" mode="contained" style={styles.button}>
-                Editar perfil
-              </Button>
+              <Text variant="titleMedium">
+                {datos.length > 0 ? datos[0].name : "Nombre no disponible"}
+              </Text>
             </Card.Content>
+            <Button icon="pencil" contentStyle={{ flexDirection: "row-reverse" }} mode="contained" style={styles.buttonEdit}>
+              Editar perfil
+            </Button>
 
             <Divider style={styles.divider} />
-
-            {/* <Text style={{ marginBottom: 20, textAlign: "justify" }}>
-              "En nuestra empresa, valoramos tu experiencia y pasión por la
-              cultura. Trabajamos juntos para promover la libre expresión
-              cultural, fomentar la creatividad y estimular la investigación en
-              el ámbito científico, literario y artístico. Tu contribución es
-              fundamental para enriquecer nuestros proyectos. ¡Únete a nosotros
-              y juntos impulsemos la cultura y su difusión!"
-            </Text> */}
-
-            <View style={styles.rowContainer}>
-              <TouchableRipple style={styles.column}>
-                <View style={styles.centerContent}>
-                  <IconButton icon="account-outline" size={28} />
-                  <Text variant="titleMedium">Mi cuenta</Text>
-                  <Text variant="bodySmall">
-                    Administra tus datos personales
-                  </Text>
-                </View>
-              </TouchableRipple>
-
-              <TouchableRipple style={styles.column}>
-                <View style={styles.centerContent}>
-                  <IconButton icon="cart-check" size={25} />
-                  <Text variant="titleMedium">Historial de pedidos</Text>
-                  <Text variant="bodySmall" style={{ marginBottom: 15 }}>
-                    Encuentra tus pedidos anteriores y en curso
-                  </Text>
-                </View>
-              </TouchableRipple>
-            </View>
 
             <View style={styles.rowContainer}>
               <TouchableRipple
@@ -108,10 +79,10 @@ const Usuario = ({ navigation, user }) => {
 
               <TouchableRipple style={styles.column}>
                 <View style={styles.centerContent}>
-                  <IconButton icon="book-open-outline" size={28} />
-                  <Text variant="titleMedium">Agenda de direcciones</Text>
+                  <IconButton icon="cart-check" size={25} />
+                  <Text variant="titleMedium">Historial de pedidos</Text>
                   <Text variant="bodySmall" style={{ marginBottom: 15 }}>
-                    Agrega o edita tus direcciones de envío
+                    Encuentra tus pedidos anteriores y en curso
                   </Text>
                 </View>
               </TouchableRipple>
@@ -122,7 +93,6 @@ const Usuario = ({ navigation, user }) => {
               style={styles.buttonClose}
               contentStyle={{ flexDirection: "row-reverse" }}
               onPress={handleLogout}
-
             >
               Cerrar Sesión
             </Button>
@@ -147,11 +117,6 @@ const styles = StyleSheet.create({
   cardContent: {
     alignItems: "center",
     justifyContent: "center",
-  },
-  button: {
-    borderWidth: 0.5,
-    borderColor: "#531949",
-    margin: 10,
   },
   divider: {
     height: 1,
@@ -178,6 +143,18 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#531949",
     marginTop: 30,
+    borderRadius: 0,
+  },
+  button: {
+    borderWidth: 0.5,
+    borderColor: "#531949",
+    margin: 10,
+  },
+  buttonEdit: {
+    borderWidth: 0.5,
+    borderColor: "#531949",
+    marginTop: 15,
+    marginBottom: 15,
     borderRadius: 0,
   },
 });
