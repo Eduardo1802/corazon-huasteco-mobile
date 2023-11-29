@@ -109,7 +109,10 @@ const ChatBot = ({ navigation }) => {
                         right={(props) => (
                           <Avatar.Image
                             size={44}
-                            source={require("../../../assets/img/chatbot/bot.jpg")}
+                            source={{
+                              uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/ChatBot%2Fbot.jpg?alt=media&token=7f860b4b-4e6d-404c-8e81-eb0b8de7893b"
+                            }}
+
                           />
                         )}
                       />
@@ -138,7 +141,10 @@ const ChatBot = ({ navigation }) => {
                         left={(props) => (
                           <Avatar.Image
                             size={44}
-                            source={require("../../../assets/img/chatbot/perfil.png")}
+                            source={{
+                              uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/ChatBot%2Fperfil.png?alt=media&token=9b9bf010-4fc0-43bd-8e64-315c6b237613"
+                            }}
+
                           />
                         )}
                       />

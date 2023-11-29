@@ -298,7 +298,10 @@ const Tematicas = () => {
                 <Avatar.Image
                   size={100}
                   style={styles.img}
-                  source={require("../../../assets/img/chatbot/perfil.png")}
+                  source={{
+                    uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/ChatBot%2Fperfil.png?alt=media&token=9b9bf010-4fc0-43bd-8e64-315c6b237613"
+                  }}
+
                 />
                 <Divider style={styles.divider2} />
                 <TextInput
