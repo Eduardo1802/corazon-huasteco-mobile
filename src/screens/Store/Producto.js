@@ -227,7 +227,9 @@ const alertStyles = {
                 left={(props) => (
                   <Avatar.Image
                     size={44}
-                    source={require("../../../assets/img/chatbot/perfil.png")}
+                    source={{
+                      uri: "https://firebasestorage.googleapis.com/v0/b/corazon-huasteco-bfbcc.appspot.com/o/ChatBot%2Fperfil.png?alt=media&token=9b9bf010-4fc0-43bd-8e64-315c6b237613"
+                    }}
                   />
                   // <Avatar.Text size={44} label="R" />
                 )}
