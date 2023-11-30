@@ -13,7 +13,6 @@ import imgCentro from '../../../assets/img/inicio/Foto-centro-02.jpg';
 import imgLateral from '../../../assets/img/inicio/imagenLateral.jpg';
 import imgMural from '../../../assets/img/inicio/imgMural-01.jpg';
 import imgSierra from '../../../assets/img/inicio/imgSierra.jpg';
-import MapView, { Marker } from 'react-native-maps';
 
 
 
@@ -175,73 +174,6 @@ const Inicio = ({ navigation }) => {
         <Text style={styles.normalText}>
           Huejutla colinda al norte con el municipio de Orizatlán, el estado de Veracruz; al este con Veracruz, Huautla y Atlapexco; al sur con Atlapexco, Huazalingo y Tlanchinol; y al oeste con Tlanchinol, Jaltocan y Orizatlán.
         </Text>
-        {/*MAPA*/}
-        <View style={styles.imageContainer}>
-
-        <MapView
-  style={{ width: '100%', height: '100%' }}
-  initialRegion={{
-    latitude: 21.140622298595282,
-    longitude:-98.41992130366502,
-    latitudeDelta: 0.03,
-    longitudeDelta: 0.03,
-  }}
->
-<Marker
-    coordinate={{
-      latitude: 21.141316, 
-      longitude: -98.419818,
-    }}
-    title="Reloj Monumental de Huejutla."
-    description="Emblema del pueblo Huejutlense"
-  />
-  <Marker
-    coordinate={{
-      latitude: 21.147628, 
-      longitude: -98.408421,
-    }}
-    title="Parque Ecológico Municipal."
-    description="Icónico parque dentro de la ciudad Huejutlense"
-  />
-  <Marker
-    coordinate={{
-      latitude: 21.146651658898385, 
-      longitude: -98.41056065913764,
-    }}
-    title="Casa de la Cultura."
-    description="Casa de la cultura municipal"
-  />
-  <Marker
-    coordinate={{
-      latitude:21.13948202935648,
-      longitude: -98.42048014821559
-    }}
-    title="Palacio Municipal." 
-    description="Presidencia Municipal"
-  />
-  <Marker
-    coordinate={{
-      latitude:21.14090235735598,  
-      longitude:  -98.4198894423339 
-    }}
-    title="Centro Historico." 
-    description="Centro Historico de Huejutla" 
-  />
-
-<Marker
-    coordinate={{
-      latitude:21.14097899812254,  
-      longitude:-98.419759762751 //
-    }}
-    title="Letras Monumentales." 
-    description="Emblema turistico" 
-  />
-</MapView>
-
-        </View>
-            
-
-
       </View>
     </ScrollView>
   );
